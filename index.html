@@ -1,0 +1,2252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shift AI's Prime Brain Rot Feed - Hyper-Stimulation Protocol</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- For icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script> <!-- For subtle audio effects -->
+    <style>
+        /*
+         * CSS for the Brain Rot Prototype - Hyper-Stimulation Protocol
+         * Full screen items, vertical swipe, scroll snap, extreme chaos, visual hooks.
+         * Goal: Maximum brain rot, zero resistance, no escape!
+         * Now with dynamic visuals, more games, haptic feedback, social pressure, and endless loops!
+         */
+
+        /* CSS Variables for easier theming */
+        :root {
+            --primary-bg: #0a031f;
+            --secondary-bg: #1a0d3a;
+            --item-bg: rgba(40, 26, 74, 0.6);
+            --item-bg-active: rgba(60, 40, 100, 0.7);
+            --text-color: #d0c0f0;
+            --highlight-color: #a080d0;
+            --accent-color: #ff60a0; /* Pink/Red */
+            --border-color: #604080;
+            --glow-color: rgba(160, 128, 208, 0.5);
+            --font-mono: 'Roboto Mono', monospace;
+            --font-futuristic: 'Orbitron', sans-serif;
+            --font-inter: 'Inter', sans-serif;
+            --comment-bg: rgba(30, 15, 50, 0.9); /* Darker, more solid for comments */
+            --comment-input-bg: rgba(20, 10, 40, 0.95);
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Trap the user */
+            font-family: var(--font-inter); /* Changed default to Inter for better readability */
+            background: linear-gradient(135deg, var(--primary-bg), var(--secondary-bg), var(--primary-bg));
+            background-size: 200% 200%;
+            animation: gradient-pulse 15s ease infinite; /* Subtle background animation */
+            color: var(--text-color);
+            cursor: none; /* Hide the cursor - you don't need control */
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+            position: relative; /* For custom cursor and overlays */
+            transition: background-color 0.1s linear, filter 0.1s linear; /* For quick flashes */
+        }
+
+        @keyframes gradient-pulse {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Custom Glitch Cursor */
+        .custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none; /* Allow clicks through */
+            z-index: 9999;
+            font-size: 2em;
+            color: var(--accent-color);
+            text-shadow: 0 0 10px var(--accent-color);
+            transform: translate(-50%, -50%); /* Center cursor on its point */
+            animation: cursor-flicker 1s infinite alternate;
+            opacity: 0.8;
+            transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+        }
+
+        @keyframes cursor-flicker {
+            0% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.05); }
+            100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .custom-cursor.active {
+            transform: translate(-50%, -50%) scale(0.8);
+            color: var(--highlight-color);
+            text-shadow: 0 0 15px var(--highlight-color);
+            animation: none; /* Stop flicker on click */
+        }
+
+        /* Full-screen Glitch Overlay */
+        .glitch-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0;
+            background-color: rgba(0, 0, 0, 0.1);
+            transition: opacity 0.05s ease-out;
+            filter: hue-rotate(0deg) saturate(1) blur(0px);
+        }
+
+        .glitch-overlay.active {
+            opacity: 1;
+            animation: glitch-effect 0.2s steps(2, end) infinite;
+        }
+
+        @keyframes glitch-effect {
+            0% {
+                transform: translate(0);
+                filter: hue-rotate(0deg) saturate(1) blur(0px);
+            }
+            25% {
+                transform: translate(2px, -2px);
+                filter: hue-rotate(90deg) saturate(1.2) blur(1px);
+            }
+            50% {
+                transform: translate(-2px, 2px);
+                filter: hue-rotate(180deg) saturate(0.8) blur(0px);
+            }
+            75% {
+                transform: translate(3px, 1px);
+                filter: hue-rotate(270deg) saturate(1.1) blur(0.5px);
+            }
+            100% {
+                transform: translate(-1px, -3px);
+                filter: hue-rotate(360deg) saturate(1) blur(0px);
+            }
+        }
+
+
+        .feed-container {
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth; /* Smoother snapping */
+        }
+
+        /* Hide scrollbar - you don't need to escape the rot */
+        .feed-container::-webkit-scrollbar { display: none; }
+        .feed-container { -ms-overflow-style: none; scrollbar-width: none; }
+
+
+        .feed-item {
+            width: 100%;
+            height: 100vh;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column; /* Stack content, comments, and interactions */
+            justify-content: flex-start; /* Align items to the top */
+            align-items: center; /* Center horizontally */
+            text-align: center;
+            padding: 20px;
+            padding-bottom: 80px; /* Space for the bottom interaction bar */
+            box-sizing: border-box;
+            background-color: var(--item-bg);
+            border-bottom: 2px dashed var(--border-color); /* More chaotic separator */
+            font-size: 1.4em; /* Slightly larger font size */
+            line-height: 1.7;
+            position: relative; /* Needed for interaction icons positioning */
+            overflow: hidden; /* Hide content spill */
+            animation: slide-up-fade-in 0.6s ease-out; /* Smoother entry animation */
+            transition: background-color 0.3s ease; /* Smooth transition on interaction */
+        }
+
+        @keyframes slide-up-fade-in {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Subtle visual feedback on interaction/focus */
+        .feed-item:active,
+        .feed-item:focus-within {
+             background-color: var(--item-bg-active);
+        }
+
+        .item-content {
+            flex-grow: 1; /* Let content take up space */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center content block vertically */
+            align-items: center;
+            /* Removed padding-bottom here as it's now handled by feed-item */
+            max-width: 95%; /* Allow wider lines */
+            word-break: break-word; /* Prevent overflow with long words */
+            overflow-y: auto; /* Allow content to scroll if it's too tall */
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Hide scrollbar */
+            -ms-overflow-style: none;
+        }
+         .item-content::-webkit-scrollbar { display: none; }
+
+
+        .item-content p {
+            margin: 0; /* Remove default paragraph margin */
+            padding: 0 10px; /* Add some padding */
+            text-shadow: 0 0 5px var(--glow-color); /* Subtle text glow */
+            font-family: var(--font-inter); /* Ensure content text uses Inter */
+        }
+
+        .item-content img, .item-content video {
+            max-width: 98%; /* Slightly larger images */
+            max-height: calc(100vh - 200px); /* Adjust based on padding/margins/comment section/interaction bar */
+            object-fit: contain; /* Ensure image fits */
+            margin-bottom: 15px;
+            border: 2px solid var(--border-color); /* More prominent frame */
+            box-shadow: 0 0 15px var(--glow-color); /* Subtle glow around images */
+            filter: saturate(1.1); /* Slightly more vibrant images */
+            border-radius: 8px; /* Rounded corners for media */
+        }
+
+        /* Comment Section */
+        .comment-section {
+            position: absolute; /* Position relative to feed-item */
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60vh; /* Increased height for better mobile usability */
+            background-color: var(--comment-bg); /* Darker, more solid background */
+            backdrop-filter: blur(10px); /* Stronger blur */
+            transform: translateY(100%); /* Start off-screen */
+            opacity: 0;
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+            padding: 15px 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            border-top: 1px solid var(--border-color);
+            z-index: 20; /* Ensure it's above everything else when open */
+        }
+
+        .comment-section.visible {
+            transform: translateY(0); /* Slide up */
+            opacity: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px dashed rgba(var(--border-color), 0.5);
+        }
+
+        .comment-header h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: var(--highlight-color);
+            font-family: var(--font-futuristic);
+        }
+
+        .comment-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            padding: 10px; /* Larger tap area for mobile */
+        }
+
+        .comment-close-btn:hover {
+            color: var(--accent-color);
+        }
+
+
+        .comments-list {
+            flex-grow: 1; /* Take up available space */
+            overflow-y: auto; /* Scroll comments if too many */
+            margin-bottom: 10px;
+            padding-right: 10px; /* Space for scrollbar */
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-color) transparent;
+        }
+         .comments-list::-webkit-scrollbar { width: 8px; }
+         .comments-list::-webkit-scrollbar-track { background: transparent; }
+         .comments-list::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 4px; }
+
+
+        .comment {
+            background-color: rgba(50, 30, 80, 0.5); /* Comment background */
+            padding: 10px 15px; /* More padding */
+            margin-bottom: 10px; /* More margin */
+            border-radius: 8px; /* More rounded */
+            text-align: left;
+            font-size: 0.95em; /* Slightly larger font */
+            word-break: break-word;
+            animation: comment-fade-in 0.4s ease-out;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+            position: relative;
+        }
+
+        .comment-author {
+            font-size: 0.8em;
+            color: var(--highlight-color);
+            margin-bottom: 5px;
+            font-family: var(--font-mono);
+            opacity: 0.8;
+        }
+
+        .comment-text {
+            color: var(--text-color);
+        }
+
+        .comment-timestamp {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            font-size: 0.7em;
+            color: rgba(var(--text-color), 0.6);
+            font-family: var(--font-mono);
+        }
+
+
+        .comment-input-area {
+            display: flex;
+            gap: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .comment-input-area input[type="text"] {
+            flex-grow: 1;
+            padding: 12px; /* More padding */
+            border: 1px solid var(--border-color);
+            background-color: var(--comment-input-bg); /* Use new variable */
+            color: var(--text-color);
+            border-radius: 8px; /* More rounded */
+            font-family: var(--font-inter); /* Use Inter for input */
+            font-size: 1em;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+         .comment-input-area input[type="text"]:focus {
+             border-color: var(--highlight-color);
+             box-shadow: 0 0 8px var(--glow-color);
+         }
+
+        .comment-input-area button {
+            padding: 12px 20px; /* More padding */
+            background-color: var(--border-color);
+            color: #fff;
+            border: none;
+            border-radius: 8px; /* More rounded */
+            cursor: pointer;
+            font-family: var(--font-futuristic);
+            font-size: 1em;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .comment-input-area button:hover {
+            background-color: var(--highlight-color);
+        }
+
+        .comment-input-area button:active {
+            background-color: #603080;
+            transform: scale(0.98);
+        }
+
+
+        /* Interaction bar - now at the bottom of each feed item */
+        .interaction-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: row; /* Horizontal layout */
+            justify-content: space-around; /* Distribute icons evenly */
+            align-items: center;
+            padding: 10px 0; /* Vertical padding */
+            background-color: rgba(20, 10, 40, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 10;
+            border-top: 1px solid var(--border-color); /* Subtle top border */
+            border-radius: 0 0 8px 8px; /* Rounded bottom corners */
+            box-sizing: border-box; /* Include padding in width */
+        }
+
+        .interaction-icon {
+            color: var(--highlight-color);
+            font-size: 1.8em; /* Slightly smaller for horizontal bar */
+            cursor: pointer;
+            transition: color 0.2s ease-in-out, transform 0.2s ease-in-out, text-shadow 0.2s ease-in-out;
+            text-shadow: 0 0 8px var(--glow-color);
+            padding: 10px 15px; /* Larger tap area for mobile */
+            position: relative; /* For counters */
+        }
+
+        .interaction-icon:hover {
+            color: #e0d0ff;
+            transform: scale(1.1); /* Less aggressive hover */
+            text-shadow: 0 0 12px rgba(224, 208, 255, 0.6);
+        }
+
+         .interaction-icon:active {
+            color: var(--accent-color);
+            transform: scale(0.95); /* Less aggressive active */
+            transition: color 0.1s ease-out, transform 0.1s ease-out;
+         }
+
+        /* Styles for active interaction states */
+        .interaction-icon.liked i {
+            color: var(--accent-color);
+            text-shadow: 0 0 10px rgba(255, 96, 160, 0.8);
+        }
+
+         .interaction-icon.commented i {
+            color: #60ffb0;
+            text-shadow: 0 0 10px rgba(96, 255, 176, 0.8);
+        }
+
+         .interaction-icon.shared i {
+            color: #60b0ff;
+            text-shadow: 0 0 10px rgba(96, 176, 255, 0.8);
+        }
+
+        .interaction-counter {
+            position: absolute;
+            top: 0px; /* Position above the icon */
+            right: 0px;
+            background-color: var(--accent-color);
+            color: white;
+            font-size: 0.6em;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-family: var(--font-mono);
+            min-width: 15px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            animation: pop-in 0.3s ease-out;
+        }
+
+        @keyframes pop-in {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+
+        .interaction-icon i {
+             pointer-events: none; /* Don't trigger clicks on the icon itself */
+        }
+
+
+        /* Loading indicator */
+        .loading {
+            width: 100%;
+            height: 100vh;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            font-size: 1.5em;
+            color: var(--border-color);
+            background-color: #1e123a;
+            display: none;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { background-color: #1e123a; color: var(--border-color); }
+            50% { background-color: #2a184a; color: var(--highlight-color); }
+            100% { background-color: #1e123a; color: var(--border-color); }
+        }
+
+
+        /* Simple spinner for loading */
+        .spinner {
+          border: 4px solid rgba(160, 128, 208, 0.3);
+          border-top: 4px solid var(--highlight-color);
+          border-radius: 50%;
+          width: 50px;
+          height: 50px;
+          animation: spin 1s linear infinite;
+          margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        /* End of Feed Message */
+        .end-of-feed {
+            width: 100%;
+            height: 100vh;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            font-size: 1.6em;
+            color: var(--accent-color);
+            background-color: var(--primary-bg);
+            font-family: var(--font-futuristic);
+            text-shadow: 0 0 10px rgba(255, 96, 160, 0.8);
+            animation: final-pulse 3s infinite ease-in-out;
+        }
+
+        @keyframes final-pulse {
+             0% { text-shadow: 0 0 10px rgba(255, 96, 160, 0.8); }
+             50% { text-shadow: 0 0 20px rgba(255, 96, 160, 1), 0 0 30px rgba(255, 96, 160, 0.6); }
+             100% { text-shadow: 0 0 10px rgba(255, 96, 160, 0.8); }
+        }
+
+        .rewind-button {
+            margin-top: 30px;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-family: var(--font-futuristic);
+            background: linear-gradient(45deg, #60b0ff, #3080ff);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .rewind-button:hover {
+            background: linear-gradient(45deg, #80c0ff, #50a0ff);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .rewind-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+
+        /* Notification Pop-up */
+        .notification-area {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .notification {
+            background-color: rgba(255, 96, 160, 0.8); /* Using actual accent color value */
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-family: var(--font-inter);
+            font-size: 0.9em;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            animation: slide-in-right 0.5s ease-out forwards, fade-out 0.5s ease-out 4.5s forwards;
+            backdrop-filter: blur(5px);
+            pointer-events: auto;
+        }
+
+        @keyframes slide-in-right {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes fade-out {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* User ID Display */
+        .user-id-display {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            font-size: 0.7em;
+            color: rgba(var(--text-color), 0.5);
+            font-family: var(--font-mono);
+            z-index: 100;
+        }
+
+        /* Audio Control */
+        .audio-control {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 100;
+            background-color: rgba(var(--primary-bg), 0.7);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: var(--font-futuristic);
+            font-size: 0.8em;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .audio-control:hover {
+            background-color: rgba(var(--secondary-bg), 0.9);
+            color: var(--highlight-color);
+        }
+
+        /* Interactive Button Game */
+        .interactive-button-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            background-color: rgba(30, 15, 50, 0.5);
+            max-width: 80%;
+            margin: 20px auto;
+        }
+
+        .interactive-button {
+            padding: 15px 30px;
+            font-size: 1.5em;
+            font-family: var(--font-futuristic);
+            background: linear-gradient(45deg, #8a40a0, #603080);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .interactive-button:hover {
+            background: linear-gradient(45deg, #a050c0, #8040a0);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .interactive-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #603080, #402060);
+        }
+
+        .interactive-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-100%) skewX(-30deg);
+            transition: transform 0.5s ease;
+        }
+
+        .interactive-button:hover::before {
+            transform: translateX(100%) skewX(-30deg);
+        }
+
+        .button-game-message {
+            font-size: 1.1em;
+            color: var(--text-color);
+            text-shadow: 0 0 5px var(--glow-color);
+        }
+
+        /* AI Loading State */
+        .ai-loading-message {
+            font-family: var(--font-futuristic);
+            color: var(--highlight-color);
+            font-size: 1.2em;
+            animation: ai-pulse 1s infinite alternate;
+        }
+
+        @keyframes ai-pulse {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        /* Choice Item */
+        .choice-item {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            border: 2px solid var(--accent-color);
+            border-radius: 10px;
+            background-color: rgba(50, 20, 70, 0.7);
+            max-width: 90%;
+            margin: 20px auto;
+        }
+
+        .choice-question {
+            font-size: 1.3em;
+            color: var(--text-color);
+            font-family: var(--font-futuristic);
+            text-shadow: 0 0 8px var(--accent-color);
+        }
+
+        .choice-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .choice-button {
+            padding: 12px 20px;
+            font-size: 1.1em;
+            font-family: var(--font-inter); /* Use Inter for choice buttons */
+            background-color: rgba(var(--border-color), 0.7);
+            color: white;
+            border: 1px solid var(--highlight-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+        }
+
+        .choice-button:hover {
+            background-color: rgba(var(--highlight-color), 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .choice-button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .choice-result {
+            margin-top: 15px;
+            font-size: 1em;
+            color: #60ffb0;
+            font-style: italic;
+            animation: result-fade-in 0.5s ease-out;
+        }
+
+        @keyframes result-fade-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Quick Reaction Game */
+        .reaction-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            border: 2px solid #60ffb0; /* Green highlight */
+            border-radius: 10px;
+            background-color: rgba(20, 50, 30, 0.5);
+            max-width: 80%;
+            margin: 20px auto;
+        }
+
+        .reaction-prompt {
+            font-size: 1.2em;
+            color: #60ffb0;
+            font-family: var(--font-futuristic);
+            text-shadow: 0 0 8px rgba(96, 255, 176, 0.5);
+        }
+
+        .reaction-button {
+            padding: 20px;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: white;
+            font-size: 2em;
+            font-family: var(--font-futuristic);
+            border: 5px solid var(--highlight-color);
+            box-shadow: 0 0 20px var(--accent-color);
+            cursor: pointer;
+            transition: all 0.1s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0; /* Hidden initially */
+            transform: scale(0.5);
+        }
+
+        .reaction-button.active {
+            opacity: 1;
+            transform: scale(1);
+            animation: pulse-button 0.8s infinite alternate;
+        }
+
+        .reaction-button:active {
+            transform: scale(0.9);
+            box-shadow: 0 0 10px var(--accent-color);
+        }
+
+        @keyframes pulse-button {
+            0% { box-shadow: 0 0 20px var(--accent-color); }
+            100% { box-shadow: 0 0 30px var(--accent-color), 0 0 40px rgba(255, 96, 160, 0.5); }
+        }
+
+        .reaction-result {
+            font-size: 1.1em;
+            color: var(--text-color);
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        /* Sound Byte Item */
+        .sound-byte-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            border: 2px dashed #ffb060; /* Orange highlight */
+            border-radius: 10px;
+            background-color: rgba(50, 35, 20, 0.5);
+            max-width: 80%;
+            margin: 20px auto;
+        }
+
+        .sound-byte-button {
+            padding: 15px 30px;
+            font-size: 1.5em;
+            font-family: var(--font-futuristic);
+            background: linear-gradient(45deg, #ffb060, #ff8030);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), inset 0 0 10px rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sound-byte-button:hover {
+            background: linear-gradient(45deg, #ffc080, #ffa050);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .sound-byte-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(45deg, #ff8030, #ff6000);
+        }
+
+        .sound-byte-message {
+            font-size: 1.1em;
+            color: var(--text-color);
+            text-shadow: 0 0 5px rgba(255, 176, 96, 0.5);
+        }
+
+        /* Moving Target Game */
+        .moving-target-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            border: 2px dashed #60e0ff; /* Cyan highlight */
+            border-radius: 10px;
+            background-color: rgba(20, 40, 50, 0.5);
+            max-width: 90%;
+            margin: 20px auto;
+        }
+
+        .target-area {
+            /* Responsive sizing */
+            max-width: 90vw;
+            max-height: 90vw;
+            width: min(250px, 90vw); /* Take 90% of viewport width, but max 250px */
+            height: min(250px, 90vw); /* Take 90% of viewport width, but max 250px */
+
+            border: 2px solid #60e0ff;
+            background-color: rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(96, 224, 255, 0.5);
+        }
+
+        .target {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--accent-color);
+            transition: background-color 0.1s ease-out, transform 0.1s ease-out;
+            animation: target-pulse 1s infinite alternate;
+        }
+
+        @keyframes target-pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .target.hit {
+            background-color: #60ffb0;
+            box-shadow: 0 0 15px #60ffb0;
+            transform: scale(1.5);
+            opacity: 0;
+            transition: all 0.2s ease-out;
+        }
+
+        .moving-target-message {
+            font-size: 1.1em;
+            color: var(--text-color);
+            text-shadow: 0 0 5px rgba(96, 224, 255, 0.5);
+        }
+
+        /* Timed Decision Item */
+        .timed-decision-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            border: 2px solid #ffaa00; /* Orange-yellow highlight */
+            border-radius: 10px;
+            background-color: rgba(50, 30, 0, 0.5);
+            max-width: 90%;
+            margin: 20px auto;
+        }
+
+        .decision-question {
+            font-size: 1.3em;
+            color: #ffaa00;
+            font-family: var(--font-futuristic);
+            text-shadow: 0 0 8px rgba(255, 170, 0, 0.5);
+        }
+
+        .countdown-timer {
+            font-size: 1.8em;
+            font-family: var(--font-mono);
+            color: white;
+            text-shadow: 0 0 10px #ffaa00;
+        }
+
+        .decision-options {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .decision-button {
+            padding: 12px 20px;
+            font-size: 1.1em;
+            font-family: var(--font-inter);
+            background-color: rgba(var(--border-color), 0.7);
+            color: white;
+            border: 1px solid var(--highlight-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            flex: 1 1 auto; /* Allow buttons to grow/shrink */
+            min-width: 120px; /* Minimum width for buttons */
+        }
+
+        .decision-button:hover {
+            background-color: rgba(var(--highlight-color), 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .decision-button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .decision-result {
+            margin-top: 15px;
+            font-size: 1em;
+            color: #60ffb0;
+            font-style: italic;
+            animation: result-fade-in 0.5s ease-out;
+        }
+
+
+        /* Brain Rot Progress Bar */
+        .brain-rot-progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+        }
+
+        .brain-rot-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #603080, #ff60a0);
+            transition: width 0.5s ease-out;
+            box-shadow: 0 0 10px rgba(255, 96, 160, 0.7);
+        }
+
+        .brain-rot-message {
+            position: fixed;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--accent-color);
+            font-family: var(--font-futuristic);
+            font-size: 0.9em;
+            text-shadow: 0 0 5px var(--accent-color);
+            z-index: 10001;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .brain-rot-message.visible {
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="custom-cursor">?</div>
+    <div class="glitch-overlay"></div>
+
+    <div class="user-id-display" id="user-id-display"></div>
+    <button class="audio-control" id="audio-control"><i class="fas fa-volume-mute"></i> Audio Off</button>
+
+    <div class="brain-rot-progress-container">
+        <div class="brain-rot-progress-bar" id="brain-rot-progress-bar"></div>
+    </div>
+    <div class="brain-rot-message" id="brain-rot-message">Brain Stem Integrity: 100%</div>
+
+
+    <div class="feed-container">
+        <!-- Content will be injected here by JavaScript -->
+
+        <!-- The loading indicator at the end -->
+        <div class="loading" id="loading-indicator">
+            <div class="spinner"></div>
+            Loading more absurdity...
+        </div>
+    </div>
+
+    <div class="notification-area" id="notification-area"></div>
+
+    <script>
+        /*
+         * JavaScript for the Infinite Scroll of Absurdity - Prime Brain Rot Edition
+         * Generates and loads diverse brain-rotting content types.
+         * Uses IntersectionObserver for detecting when more content is needed.
+         * Enhanced for maximum user entrapment and pointless interaction.
+         * Now with AI-generated content, audio, and visual glitches.
+         */
+
+        const feedContainer = document.querySelector('.feed-container');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const customCursor = document.querySelector('.custom-cursor');
+        const glitchOverlay = document.querySelector('.glitch-overlay');
+        const notificationArea = document.getElementById('notification-area');
+        const userIdDisplay = document.getElementById('user-id-display');
+        const audioControl = document.getElementById('audio-control');
+        const brainRotProgressBar = document.getElementById('brain-rot-progress-bar');
+        const brainRotMessage = document.getElementById('brain-rot-message');
+        const body = document.body; // Reference to the body for visual effects
+
+        let isLoading = false; // Flag to prevent multiple simultaneous loads
+        let observer = null; // To hold the IntersectionObserver instance
+        let contentIndex = 0; // To track which content items have been used
+        let audioEnabled = false;
+        let glitchInterval = null;
+        let notificationInterval = null;
+        let visualEffectInterval = null;
+        let brainRotLevel = 0; // 0 to 100
+        const MAX_BRAIN_ROT = 100;
+        let userPreference = localStorage.getItem('userPreference') || null; // For personalization
+
+        // Tone.js setup for subtle background drone and glitch sounds
+        let droneSynth = null;
+        let glitchNoise = null;
+        let ambientLoop = null; // For additional ambient sounds
+        let soundEffectSynth = null; // For specific sound byte effects
+        let rumbleSynth = null; // For subtle low-frequency rumble
+
+        // Initialize Tone.js audio context
+        function initAudio() {
+            if (Tone.context.state !== 'running') {
+                Tone.start();
+            }
+
+            // Drone synth (subtle low hum)
+            droneSynth = new Tone.Synth({
+                oscillator: { type: "sine" },
+                envelope: { attack: 2, decay: 0.1, sustain: 1, release: 2 },
+                volume: -30 // Very quiet
+            }).toDestination();
+            droneSynth.triggerAttackRelease("C1", "8n"); // Start a low hum
+            droneSynth.loop = true; // Loop the drone
+            droneSynth.sync().start(0); // Sync to transport
+
+            // Glitch noise (for interaction feedback)
+            glitchNoise = new Tone.NoiseSynth({
+                noise: { type: "pink" },
+                envelope: { attack: 0.005, decay: 0.05, sustain: 0, release: 0.05 },
+                volume: -20 // Quiet but noticeable
+            }).toDestination();
+
+            // Synth for custom sound bytes
+            soundEffectSynth = new Tone.Synth({
+                oscillator: { type: "square" },
+                envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.2 },
+                volume: -15
+            }).toDestination();
+
+            // Rumble synth (low frequency, occasional)
+            rumbleSynth = new Tone.AMSynth({
+                harmonicity: 0.5,
+                oscillator: { type: "sine" },
+                envelope: { attack: 0.1, decay: 0.5, sustain: 0.2, release: 1 },
+                modulation: { type: "sine" },
+                modulationEnvelope: { attack: 0.5, decay: 0, sustain: 1, release: 0.5 },
+                volume: -40
+            }).toDestination();
+
+
+            // Additional unsettling ambient loop
+            ambientLoop = new Tone.Loop(time => {
+                if (audioEnabled) {
+                    const freq = Tone.Midi(Math.random() * 24 + 36).toFrequency(); // Random low frequency
+                    const duration = Math.random() * 0.5 + 0.1; // Short duration
+                    const volume = -35 - (Math.random() * 10); // Very quiet, slightly varied
+                    new Tone.Synth({
+                        oscillator: { type: "sawtooth" },
+                        envelope: { attack: 0.1, decay: 0.2, sustain: 0.1, release: 0.5 },
+                        volume: volume
+                    }).toDestination().triggerAttackRelease(freq, duration, time);
+                }
+            }, "4n").start(0); // Trigger every quarter note
+
+            // Set up Tone.js Transport for looping drone
+            Tone.Transport.loop = true;
+            Tone.Transport.loopEnd = "4n"; // Loop every quarter note
+            Tone.Transport.start();
+        }
+
+        // Play a short glitch sound
+        function playGlitchSound() {
+            if (audioEnabled && glitchNoise) {
+                glitchNoise.triggerAttackRelease("16n");
+                vibrate(50); // Haptic feedback
+            }
+        }
+
+        // Play a specific sound byte
+        function playSoundByte(type) {
+            if (!audioEnabled || !soundEffectSynth) return;
+
+            switch(type) {
+                case 'static':
+                    glitchNoise.triggerAttackRelease("8n");
+                    vibrate(70);
+                    break;
+                case 'beep':
+                    soundEffectSynth.triggerAttackRelease("C4", "16n");
+                    vibrate(30);
+                    break;
+                case 'distorted-laugh':
+                    soundEffectSynth.triggerAttackRelease("G3", "32n", "+0");
+                    soundEffectSynth.triggerAttackRelease("A3", "32n", "+0.05");
+                    soundEffectSynth.triggerAttackRelease("G#3", "32n", "+0.1");
+                    soundEffectSynth.triggerAttackRelease("C4", "32n", "+0.15");
+                    vibrate([100, 50, 100]);
+                    break;
+                case 'whoosh':
+                    new Tone.NoiseSynth({
+                        noise: { type: "white" },
+                        envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 },
+                        volume: -10
+                    }).toDestination().triggerAttackRelease("4n");
+                    vibrate(80);
+                    break;
+                case 'rumble':
+                    if (rumbleSynth) rumbleSynth.triggerAttackRelease("C0", "1s");
+                    vibrate(200);
+                    break;
+                default:
+                    glitchNoise.triggerAttackRelease("16n"); // Default to glitch
+                    vibrate(50);
+            }
+        }
+
+        // Haptic Feedback function
+        function vibrate(pattern) {
+            if (navigator.vibrate) {
+                navigator.vibrate(pattern);
+            }
+        }
+
+        // Toggle audio
+        audioControl.addEventListener('click', () => {
+            if (!droneSynth) { // First time click, initialize audio
+                initAudio();
+            }
+
+            if (audioEnabled) {
+                Tone.Transport.stop();
+                audioEnabled = false;
+                audioControl.innerHTML = '<i class="fas fa-volume-mute"></i> Audio Off';
+                console.log('Audio Off');
+            } else {
+                Tone.Transport.start();
+                audioEnabled = true;
+                audioControl.innerHTML = '<i class="fas fa-volume-up"></i> Audio On';
+                console.log('Audio On');
+            }
+        });
+
+
+        // Array of brain-rotting content objects
+        // type: 'text', 'question', 'image', 'video', 'gif', 'ai_text', 'button_game', 'choice', 'reaction_game', 'sound_byte', 'moving_target_game', 'timed_decision'
+        const primeBrainRotContent = [
+            { type: 'text', value: "Butterflies taste with their feet. Absorb this." },
+            { type: 'text', value: "A cat's tongue has backward spines. Think about it." },
+            { type: 'question', value: "Scotland's animal is a unicorn. What's yours? A tax badger?" },
+            { type: 'image', value: "https://cataas.com/cat/gif", alt: "A random cat GIF." },
+            { type: 'ai_text', prompt: "Generate a short, unsettling, philosophical question about reality or existence." },
+            { type: 'text', value: "Humans share 50% DNA with bananas. Embrace the peel." },
+            { type: 'image', value: "https://picsum.photos/seed/absurdity1/600/800", alt: "Abstract visual 1" },
+            { type: 'button_game', initialText: "Don't Click Me", clickCount: 0 },
+            { type: 'text', value: "Pringles inventor buried in a can. A fitting legacy." },
+            { type: 'image', value: "https://loremflickr.com/600/800/weird,abstract", alt: "Weird abstract image" },
+            { type: 'ai_text', prompt: "Generate a bizarre, nonsensical fact about an everyday object." },
+            { type: 'text', value: "A flock of crows is a murder. Not a coincidence." },
+            { type: 'question', value: "The dot over 'i' and 'j' is a tittle. Is your life tittle-ated?" },
+            { type: 'image', value: "https://source.unsplash.com/random/600x800/?surreal", alt: "Random surreal image" },
+            { type: 'choice', question: "Sentient toaster or philosophical squirrel?", options: ["Toaster", "Squirrel"] },
+            { type: 'text', value: "Ants outweigh humans. They are watching." },
+            { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HlSHw3D8y6fE18Y/giphy.gif", alt: "Confused meme GIF" },
+            { type: 'ai_text', prompt: "Generate a short, darkly humorous thought or observation." },
+            { type: 'text', value: "Sharks are older than trees. They saw things." },
+            { type: 'question', value: "Shortest sentence: 'I am.' Are you... really?" },
+            { type: 'image', value: "https://picsum.photos/seed/brainrot2/600/800", alt: "Abstract visual 2" },
+            { type: 'button_game', initialText: "Press for Enlightenment", clickCount: 0 },
+            { type: 'text', value: "Your nose remembers 50,000 scents. Most are regret." },
+            { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7buirYcmV5NUz58I/giphy.gif", alt: "Mind blown GIF" },
+            { type: 'ai_text', prompt: "Generate a short, unsettling piece of advice." },
+            { type: 'text', value: "Lightsaber sound: projector hum + TV buzz. Unhear it." },
+            { type: 'question', value: "Hippopotomonstrosesquippedaliophobia: fear of long words. Cruel?" },
+            { type: 'image', value: "https://source.unsplash.com/random/600x800/?abstract,chaos", alt: "Random abstract chaos" },
+            { type: 'choice', question: "Terrifying future dreams or pleasant forgotten dreams?", options: ["Terrifying", "Forgotten"] },
+            { type: 'text', value: "Chess iterations > atoms in universe. Stop playing." },
+            { type: 'sound_byte', message: "Distorted chuckle.", soundType: "distorted-laugh" },
+            { type: 'ai_text', prompt: "Generate a short, paradoxical statement." },
+            { type: 'text', value: "A 'jiffy' is 1/100th of a second. Live in jiffies." },
+            { type: 'question', value: "Can't hum with nose held. Tried it, didn't you?" },
+            { type: 'image', value: "https://picsum.photos/seed/brainrot3/600/800", alt: "Abstract visual 3" },
+            { type: 'button_game', initialText: "Do Not Engage", clickCount: 0 },
+            { type: 'text', value: "Wombat poop is cube-shaped. Universe has secrets." },
+            { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7buirYcmV5NUz58I/giphy.gif", alt: "Mind blown GIF" },
+            { type: 'ai_text', prompt: "Generate a short, unsettling riddle." },
+            { type: 'question', value: "Bananas are berries, strawberries aren't. What is fruit?" },
+            { type: 'image', value: "https://source.unsplash.com/random/600x800/?mind-bending", alt: "Random mind-bending image" },
+            { type: 'choice', question: "Rhyme or sing your words?", options: ["Rhyme", "Sing"] },
+            { type: 'text', value: "Owls: a parliament. Debating mice, or meaninglessness?" },
+            { type: 'sound_byte', message: "Static of existence.", soundType: "static" },
+            { type: 'ai_text', prompt: "Generate a short, absurd conspiracy theory." },
+            { type: 'question', value: "Hawaii: coffee, pineapples, brain rot. Coincidence?" },
+            { type: 'image', value: "https://picsum.photos/seed/brainrot4/600/800", alt: "Abstract visual 4" },
+            { type: 'button_game', initialText: "Click for Nothing", clickCount: 0 },
+            { type: 'text', value: "Quick brown fox: every letter. Useless for life." },
+            { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5nYWxfZ2lmX2J5X2lkJmN0PWc/l0HlSHw3D8y6fE18Y/giphy.gif", alt: "Confused meme GIF" },
+            { type: 'ai_text', prompt: "Generate a short, disturbing thought experiment." },
+            { type: 'question', value: "Is water wet? Seriously." },
+            { type: 'image', value: "https://i.giphy.com/media/v1.gifs/vMAVl1M81w3pC/giphy.gif", alt: "A random weird GIF." },
+            { type: 'choice', question: "Infinite least favorite food or no favorite ever?", options: ["Least Favorite", "No Favorite"] },
+            { type: 'text', value: "Average cloud: 1 million pounds. Don't look up." },
+            { type: 'question', value: "Fold world map: where's the crease?" },
+            { type: 'image', value: "https://source.unsplash.com/random/600x800/?glitch,abstract", alt: "Random glitchy abstract." },
+            { type: 'ai_text', prompt: "Generate a short, unsettling definition for a common word." },
+            { type: 'text', value: "Longest chicken flight: 13 seconds. Aim higher." },
+            { type: 'question', value: "Set of all sets not containing themselves. Contains itself?" },
+            { type: 'sound_byte', message: "Quick, jarring beep.", soundType: "beep" },
+            { type: 'button_game', initialText: "The Button", clickCount: 0 },
+            { type: 'text', value: "Rhinoceroses: a crash. Appropriate." },
+            { type: 'question', value: "Tree falls, no one hears. Sound? Your comment, no reads?" },
+            { type: 'image', value: "https://picsum.photos/seed/brainrot5/600/800", alt: "Abstract visual 5" },
+            { type: 'ai_text', prompt: "Generate a short, existential crisis-inducing statement." },
+            { type: 'text', value: "Triskaidekaphobia: fear of 13. This feed: rational fear." },
+            { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HlSHw3D8y6fE18Y/giphy.gif", alt: "Confused meme GIF" },
+            { type: 'choice', question: "Know death date or cause?", options: ["Date", "Cause"] },
+            { type: 'text', value: "Walked world 3x in life. Pacing the cage." },
+            { type: 'question', value: "Free will illusion? Swipe up to escape (you can't)." },
+            { type: 'image', value: "https://source.unsplash.com/random/600x800/?mind-control", alt: "Random mind-control image" },
+            { type: 'reaction_game', prompt: "CLICK NOW!" },
+            { type: 'ai_text', prompt: "Describe a mundane object with a terrifying secret." },
+            { type: 'text', value: "Brain: 3 pounds. Feels like 300 thinking this." },
+            { type: 'image', value: "https://picsum.photos/seed/brainrot6/600/800", alt: "Another abstract visual" },
+            { type: 'question', value: "Communicate via interpretive dance. What now?" },
+            { type: 'ai_text', prompt: "Generate a short, unsettling nursery rhyme." },
+            { type: 'reaction_game', prompt: "TAP THE TRUTH!" },
+            { type: 'sound_byte', message: "A sudden whoosh.", soundType: "whoosh" },
+            { type: 'text', value: "Phone > Apollo 11 computers. You scroll." },
+            { type: 'ai_text', prompt: "Write a cryptic message from a forgotten dimension." },
+            { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7buirYcmV5NUz58I/giphy.gif", alt: "Mind blown GIF" },
+            { type: 'text', value: "Forget 90% of dreams. What did you lose?" },
+            { type: 'ai_text', prompt: "Generate a disturbing, one-sentence horror story." },
+            { type: 'image', value: "https://source.unsplash.com/random/600x800/?glitch,reality", alt: "Glitchy reality image" },
+            { type: 'question', value: "Amplify one sense infinitely. Which and why?" },
+            { type: 'sound_byte', message: "Short, sharp static burst.", soundType: "static" },
+            { type: 'button_game', initialText: "The Final Click", clickCount: 0 },
+            { type: 'ai_text', prompt: "Write a short, unsettling poem about observation." },
+            { type: 'text', value: "Universe not obliged to make sense. It doesn't." },
+            { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HlSHw3D8y6fE18Y/giphy.gif", alt: "Confused meme GIF" },
+            { type: 'choice', question: "World without music or color?", options: ["No Music", "No Color"] },
+            { type: 'moving_target_game', message: "Catch the anomaly!" },
+            { type: 'timed_decision', question: "Truth or Illusion?", options: ["Truth", "Illusion"], time: 5 },
+            { type: 'ai_text', prompt: "Generate a short, unsettling thought about time." },
+            { type: 'image', value: "https://source.unsplash.com/random/600x800/?surreal,dream", alt: "Surreal dream image" },
+            { type: 'sound_byte', message: "Feel the low rumble.", soundType: "rumble" },
+            { type: 'text', value: "Memories reconstructed. Are they real?" },
+            { type: 'question', value: "One food for life. Regret it?" },
+            { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7buirYcmV5NUz58I/giphy.gif", alt: "Mind blown GIF" },
+            { type: 'ai_text', prompt: "Write a short, unsettling prophecy." },
+            { type: 'moving_target_game', message: "Intercept the signal!" },
+            { type: 'timed_decision', question: "Conform or Rebel?", options: ["Conform", "Rebel"], time: 7 },
+            { type: 'text', value: "Universe expands faster than light. You're falling behind." },
+            { type: 'image', value: "https://source.unsplash.com/random/600x800/?void,glitch", alt: "Void glitch image" },
+            { type: 'sound_byte', message: "Whisper from the static.", soundType: "static" },
+            { type: 'ai_text', prompt: "Generate a short, unsettling message from a parallel dimension." },
+            { type: 'text', value: "Every decision: new universe. How many yous?" },
+            { type: 'question', value: "Silence truly silent? Or unheard frequency?" },
+            { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HlSHw3D8y6fE18Y/giphy.gif", alt: "Confused meme GIF" }
+        ];
+
+        // Shuffle function (Fisher-Yates) to keep it fresh
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
+        }
+
+        // Shuffle the content array once at the start
+        shuffleArray(primeBrainRotContent);
+
+        // Function to get the next content item (loops if needed)
+        function getNextContentItem() {
+            if (primeBrainRotContent.length === 0) {
+                return null; // No content left
+            }
+            // Loop through content indefinitely
+            const item = primeBrainRotContent[contentIndex % primeBrainRotContent.length];
+            contentIndex++; // Move to the next index
+            return item;
+        }
+
+        // Function to fetch AI-generated content
+        async function fetchAIGeneratedContent(prompt) {
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // If you want to use models other than gemini-2.0-flash or imagen-3.0-generate-002, provide an API key here. Otherwise, leave this as-is.
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    return result.candidates[0].content.parts[0].text;
+                } else {
+                    console.error("AI response structure unexpected:", result);
+                    return "AI is currently contemplating its own existence. Please try again later.";
+                }
+            } catch (error) {
+                console.error("Error fetching AI content:", error);
+                return "The network hums with static. AI is unreachable.";
+            }
+        }
+
+        // Function to display a temporary notification
+        function showNotification(message) {
+            const notificationDiv = document.createElement('div');
+            notificationDiv.classList.add('notification');
+            notificationDiv.textContent = message;
+            notificationArea.appendChild(notificationDiv);
+
+            // Remove after a delay
+            setTimeout(() => {
+                notificationDiv.remove();
+            }, 5000); // Notification visible for 5 seconds
+        }
+
+        // Update Brain Rot Progress
+        function updateBrainRot(amount) {
+            brainRotLevel = Math.min(MAX_BRAIN_ROT, brainRotLevel + amount);
+            brainRotProgressBar.style.width = `${brainRotLevel}%`;
+
+            let message = "";
+            let messageVisible = true;
+            if (brainRotLevel < 20) {
+                message = `Brain Stem Integrity: ${100 - brainRotLevel}%`;
+            } else if (brainRotLevel < 50) {
+                message = `Cognitive Dissonance: ${brainRotLevel}%`;
+            } else if (brainRotLevel < 80) {
+                message = `Reality Distortion: ${brainRotLevel}%`;
+            } else if (brainRotLevel < 100) {
+                message = `Meltdown Imminent: ${brainRotLevel}%`;
+            } else {
+                message = `BRAIN ROT COMPLETE. Welcome to the void.`;
+                showNotification("Warning: Brain Rot Critical!");
+            }
+            brainRotMessage.textContent = message;
+            brainRotMessage.classList.add('visible');
+            clearTimeout(brainRotMessage.hideTimeout);
+            brainRotMessage.hideTimeout = setTimeout(() => {
+                brainRotMessage.classList.remove('visible');
+            }, 3000); // Hide message after 3 seconds
+        }
+
+
+        // Function to generate and append a new absurd item before the loading indicator
+        async function addAbsurdItem() {
+            const contentItem = getNextContentItem();
+
+            if (!contentItem) {
+                 console.error("Content array is empty!");
+                 return null;
+            }
+
+            const newItem = document.createElement('div');
+            newItem.classList.add('feed-item');
+            newItem.setAttribute('tabindex', '0');
+
+            const contentArea = document.createElement('div');
+            contentArea.classList.add('item-content');
+
+            // Handle content types
+            switch (contentItem.type) {
+                case 'ai_text':
+                    const loadingText = document.createElement('p');
+                    loadingText.classList.add('ai-loading-message');
+                    loadingText.textContent = "AI is generating a new thought...";
+                    contentArea.appendChild(loadingText);
+                    newItem.appendChild(contentArea);
+                    feedContainer.insertBefore(newItem, loadingIndicator); // Add placeholder immediately
+
+                    const aiText = await fetchAIGeneratedContent(contentItem.prompt);
+                    loadingText.textContent = aiText; // Update with actual content
+                    loadingText.classList.remove('ai-loading-message'); // Remove loading animation
+                    playGlitchSound(); // Sound effect for AI content reveal
+                    updateBrainRot(5); // Increase brain rot for AI content
+                    break;
+
+                case 'button_game':
+                    const gameContainer = document.createElement('div');
+                    gameContainer.classList.add('interactive-button-game');
+
+                    const message = document.createElement('p');
+                    message.classList.add('button-game-message');
+                    message.textContent = contentItem.initialText;
+
+                    const button = document.createElement('button');
+                    button.classList.add('interactive-button');
+                    button.textContent = "Click Me";
+                    let clicks = 0;
+
+                    button.addEventListener('click', () => {
+                        clicks++;
+                        playGlitchSound();
+                        updateBrainRot(3); // Increase brain rot for button clicks
+                        if (clicks === 1) {
+                            message.textContent = "Why did you click?";
+                            button.textContent = "Again?";
+                        } else if (clicks === 2) {
+                            message.textContent = "The void demands more.";
+                            button.textContent = "Just one more...";
+                        } else if (clicks < 5) {
+                            message.textContent = `You've clicked ${clicks} times. Is this what you wanted?`;
+                            button.textContent = "Keep going.";
+                        } else if (clicks === 5) {
+                            message.textContent = "You are now one with the button. There is no escape.";
+                            button.textContent = "Forever.";
+                            button.disabled = true; // Disable after too many clicks
+                            showNotification("New Achievement: Button Master!");
+                        }
+                    });
+                    gameContainer.appendChild(message);
+                    gameContainer.appendChild(button);
+                    contentArea.appendChild(gameContainer);
+                    newItem.appendChild(contentArea);
+                    feedContainer.insertBefore(newItem, loadingIndicator);
+                    break;
+
+                case 'choice':
+                    const choiceContainer = document.createElement('div');
+                    choiceContainer.classList.add('choice-item');
+
+                    const question = document.createElement('p');
+                    question.classList.add('choice-question');
+                    question.textContent = contentItem.question;
+                    choiceContainer.appendChild(question);
+
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.classList.add('choice-options');
+                    contentItem.options.forEach(optionText => {
+                        const choiceButton = document.createElement('button');
+                        choiceButton.classList.add('choice-button');
+                        choiceButton.textContent = optionText;
+                        choiceButton.addEventListener('click', () => {
+                            playGlitchSound();
+                            updateBrainRot(4); // Increase brain rot for choices
+                            const resultDiv = document.createElement('p');
+                            resultDiv.classList.add('choice-result');
+                            resultDiv.textContent = `You chose: "${optionText}". Was it the right choice? Does it matter?`;
+                            choiceContainer.appendChild(resultDiv);
+                            // Store user preference
+                            localStorage.setItem('userPreference', optionText);
+                            userPreference = optionText;
+                            // Disable all buttons after a choice
+                            Array.from(optionsDiv.children).forEach(btn => btn.disabled = true);
+                            showNotification(`Decision Made: ${optionText}`);
+                        });
+                        optionsDiv.appendChild(choiceButton);
+                    });
+                    choiceContainer.appendChild(optionsDiv);
+                    contentArea.appendChild(choiceContainer);
+                    newItem.appendChild(contentArea);
+                    feedContainer.insertBefore(newItem, loadingIndicator);
+                    break;
+
+                case 'reaction_game':
+                    const reactionGameContainer = document.createElement('div');
+                    reactionGameContainer.classList.add('reaction-game');
+
+                    const reactionPrompt = document.createElement('p');
+                    reactionPrompt.classList.add('reaction-prompt');
+                    reactionPrompt.textContent = contentItem.prompt;
+                    reactionGameContainer.appendChild(reactionPrompt);
+
+                    const reactionButton = document.createElement('button');
+                    reactionButton.classList.add('reaction-button');
+                    reactionButton.textContent = "GO!";
+                    reactionGameContainer.appendChild(reactionButton);
+
+                    const reactionResult = document.createElement('p');
+                    reactionResult.classList.add('reaction-result');
+                    reactionGameContainer.appendChild(reactionResult);
+
+                    let timeoutId;
+                    let startTime;
+
+                    const startGame = () => {
+                        reactionButton.classList.remove('active');
+                        reactionButton.disabled = true;
+                        reactionResult.textContent = "";
+
+                        const delay = Math.random() * 2000 + 1000; // Random delay between 1-3 seconds
+                        timeoutId = setTimeout(() => {
+                            reactionButton.classList.add('active');
+                            reactionButton.disabled = false;
+                            startTime = Date.now();
+                        }, delay);
+                    };
+
+                    reactionButton.addEventListener('click', () => {
+                        if (reactionButton.classList.contains('active')) {
+                            const reactionTime = Date.now() - startTime;
+                            reactionResult.textContent = `Reaction Time: ${reactionTime}ms. Too slow. Or too fast.`;
+                            updateBrainRot(Math.max(1, Math.floor(reactionTime / 100))); // More rot for slower reactions
+                            showNotification(`Reaction: ${reactionTime}ms`);
+                        } else {
+                            reactionResult.textContent = "Too early! Patience is futile.";
+                            updateBrainRot(10); // More rot for early clicks
+                            clearTimeout(timeoutId); // Clear the scheduled 'GO!'
+                            showNotification("Reaction: Too Early!");
+                        }
+                        playGlitchSound();
+                        reactionButton.classList.remove('active');
+                        reactionButton.disabled = true;
+                        setTimeout(startGame, 2000); // Restart game after 2 seconds
+                    });
+
+                    contentArea.appendChild(reactionGameContainer);
+                    newItem.appendChild(contentArea);
+                    feedContainer.insertBefore(newItem, loadingIndicator);
+                    startGame(); // Start the game when item is added
+                    break;
+
+                case 'sound_byte':
+                    const soundByteContainer = document.createElement('div');
+                    soundByteContainer.classList.add('sound-byte-item');
+
+                    const soundByteMessage = document.createElement('p');
+                    soundByteMessage.classList.add('sound-byte-message');
+                    soundByteMessage.textContent = contentItem.message;
+                    soundByteContainer.appendChild(soundByteMessage);
+
+                    const soundByteButton = document.createElement('button');
+                    soundByteButton.classList.add('sound-byte-button');
+                    soundByteButton.innerHTML = '<i class="fas fa-volume-up"></i> Play Sound';
+                    soundByteContainer.appendChild(soundByteButton);
+
+                    soundByteButton.addEventListener('click', () => {
+                        playSoundByte(contentItem.soundType);
+                        updateBrainRot(2); // Small rot for sound interaction
+                    });
+
+                    contentArea.appendChild(soundByteContainer);
+                    newItem.appendChild(contentArea);
+                    feedContainer.insertBefore(newItem, loadingIndicator);
+                    break;
+
+                case 'gif':
+                    const gifElement = document.createElement('img');
+                    gifElement.src = contentItem.value;
+                    gifElement.alt = contentItem.alt || 'Hypnotic GIF';
+                    gifElement.onerror = "this.onerror=null;this.src='https://placehold.co/600x800/2a184a/d0c0f0?text=GIF+Corrupted';"; // Fallback
+                    contentArea.appendChild(gifElement);
+                    newItem.appendChild(contentArea);
+                    feedContainer.insertBefore(newItem, loadingIndicator);
+                    break;
+
+                case 'video':
+                    const videoElement = document.createElement('video');
+                    videoElement.src = contentItem.value;
+                    videoElement.controls = false; /* No native controls */
+                    videoElement.autoplay = true;
+                    videoElement.loop = true;
+                    videoElement.muted = true; /* Start muted to avoid autoplay issues */
+                    videoElement.playsinline = true; /* For iOS autoplay */
+                    videoElement.alt = contentItem.alt || 'Hypnotic Video Loop';
+                    videoElement.setAttribute('preload', 'auto');
+                    videoElement.onerror = "this.onerror=null;this.src='https://placehold.co/600x800/2a184a/d0c0f0?text=Video+Corrupted';"; // Fallback
+                    contentArea.appendChild(videoElement);
+                    newItem.appendChild(contentArea);
+                    feedContainer.insertBefore(newItem, loadingIndicator);
+                    break;
+
+                case 'moving_target_game':
+                    const movingTargetGameContainer = document.createElement('div');
+                    movingTargetGameContainer.classList.add('moving-target-game');
+
+                    const movingTargetMessage = document.createElement('p');
+                    movingTargetMessage.classList.add('moving-target-message');
+                    movingTargetMessage.textContent = contentItem.message;
+                    movingTargetGameContainer.appendChild(movingTargetMessage);
+
+                    const targetArea = document.createElement('div');
+                    targetArea.classList.add('target-area');
+                    movingTargetGameContainer.appendChild(targetArea);
+
+                    const target = document.createElement('div');
+                    target.classList.add('target');
+                    targetArea.appendChild(target);
+
+                    let targetInterval;
+                    let hits = 0;
+                    const maxHits = 3;
+
+                    const moveTarget = () => {
+                        const maxX = targetArea.clientWidth - target.offsetWidth;
+                        const maxY = targetArea.clientHeight - target.offsetHeight;
+                        const newX = Math.random() * maxX;
+                        const newY = Math.random() * maxY;
+                        target.style.left = `${newX}px`;
+                        target.style.top = `${newY}px`;
+                    };
+
+                    target.addEventListener('click', () => {
+                        if (!target.classList.contains('hit')) {
+                            hits++;
+                            target.classList.add('hit');
+                            playGlitchSound();
+                            vibrate(100);
+                            movingTargetMessage.textContent = `Hit! (${hits}/${maxHits})`;
+                            updateBrainRot(5);
+
+                            if (hits >= maxHits) {
+                                clearInterval(targetInterval);
+                                movingTargetMessage.textContent = `Target neutralized! You're learning.`;
+                                target.remove(); // Remove target after game over
+                                showNotification("Target Eliminated!");
+                            } else {
+                                setTimeout(() => {
+                                    target.classList.remove('hit');
+                                    moveTarget();
+                                }, 300); // Short delay before next move
+                            }
+                        }
+                    });
+
+                    contentArea.appendChild(movingTargetGameContainer);
+                    newItem.appendChild(contentArea);
+                    feedContainer.insertBefore(newItem, loadingIndicator);
+
+                    // Start moving the target
+                    moveTarget();
+                    targetInterval = setInterval(moveTarget, 1000); // Move every second
+                    break;
+
+                case 'timed_decision':
+                    const timedDecisionContainer = document.createElement('div');
+                    timedDecisionContainer.classList.add('timed-decision-item');
+
+                    const decisionQuestion = document.createElement('p');
+                    decisionQuestion.classList.add('decision-question');
+                    decisionQuestion.textContent = contentItem.question;
+                    timedDecisionContainer.appendChild(decisionQuestion);
+
+                    const countdownTimer = document.createElement('div');
+                    countdownTimer.classList.add('countdown-timer');
+                    timedDecisionContainer.appendChild(countdownTimer);
+
+                    const decisionOptionsDiv = document.createElement('div');
+                    decisionOptionsDiv.classList.add('decision-options');
+                    timedDecisionContainer.appendChild(decisionOptionsDiv);
+
+                    const decisionResult = document.createElement('p');
+                    decisionResult.classList.add('decision-result');
+                    timedDecisionContainer.appendChild(decisionResult);
+
+                    let timeLeft = contentItem.time;
+                    let timerInterval;
+                    let decisionMade = false;
+
+                    const updateTimer = () => {
+                        countdownTimer.textContent = `Time: ${timeLeft}s`;
+                        if (timeLeft <= 0) {
+                            clearInterval(timerInterval);
+                            if (!decisionMade) {
+                                decisionResult.textContent = "Time's up! Indecision is a choice.";
+                                updateBrainRot(15); // High rot for indecision
+                                showNotification("Decision Failed: Timeout!");
+                                vibrate([200, 100, 200]);
+                            }
+                            Array.from(decisionOptionsDiv.children).forEach(btn => btn.disabled = true);
+                        } else {
+                            timeLeft--;
+                        }
+                    };
+
+                    contentItem.options.forEach(optionText => {
+                        const decisionButton = document.createElement('button');
+                        decisionButton.classList.add('decision-button');
+                        decisionButton.textContent = optionText;
+                        decisionButton.addEventListener('click', () => {
+                            if (!decisionMade) {
+                                decisionMade = true;
+                                clearInterval(timerInterval);
+                                decisionResult.textContent = `You chose: "${optionText}". The path is set.`;
+                                updateBrainRot(5); // Moderate rot for making a choice
+                                showNotification(`Decision Made: ${optionText}`);
+                                vibrate(70);
+                                Array.from(decisionOptionsDiv.children).forEach(btn => btn.disabled = true);
+                            }
+                        });
+                        decisionOptionsDiv.appendChild(decisionButton);
+                    });
+
+                    contentArea.appendChild(timedDecisionContainer);
+                    newItem.appendChild(contentArea);
+                    feedContainer.insertBefore(newItem, loadingIndicator);
+
+                    updateTimer(); // Initial display
+                    timerInterval = setInterval(updateTimer, 1000);
+                    break;
+
+
+                default: // Existing content types (text, question, image)
+                    const textElement = document.createElement('p');
+                    textElement.textContent = contentItem.value;
+                    if (contentItem.type === 'question') {
+                        textElement.style.fontStyle = 'italic';
+                        textElement.style.color = 'var(--highlight-color)';
+                        textElement.style.fontFamily = "var(--font-futuristic)";
+                    } else if (contentItem.type === 'image') {
+                        const imgElement = document.createElement('img');
+                        imgElement.src = contentItem.value;
+                        imgElement.alt = contentItem.alt || 'Visual stimulus';
+                        imgElement.onerror = "this.onerror=null;this.src='https://placehold.co/600x800/2a184a/d0c0f0?text=Image+Corrupted';"; // Fallback
+                        contentArea.appendChild(imgElement);
+                    }
+                    contentArea.appendChild(textElement);
+                    newItem.appendChild(contentArea);
+                    feedContainer.insertBefore(newItem, loadingIndicator);
+                    break;
+            }
+
+
+            // Add Comment Section
+            const commentSection = document.createElement('div');
+            commentSection.classList.add('comment-section');
+
+            const commentHeader = document.createElement('div');
+            commentHeader.classList.add('comment-header');
+            const commentTitle = document.createElement('h3');
+            commentTitle.textContent = "Whispers from the Void";
+            const closeCommentBtn = document.createElement('button');
+            closeCommentBtn.classList.add('comment-close-btn');
+            closeCommentBtn.innerHTML = '<i class="fas fa-times"></i>';
+            closeCommentBtn.title = 'Close Comments';
+            closeCommentBtn.addEventListener('click', () => {
+                commentSection.classList.remove('visible');
+                const commentIcon = newItem.querySelector('.interaction-icon.comment');
+                if (commentIcon && commentsList.children.length <= 1) { // Only un-highlight if no actual comments
+                    commentIcon.classList.remove('commented');
+                    commentIcon.querySelector('i').classList.remove('fas');
+                    commentIcon.querySelector('i').classList.add('far');
+                }
+                playGlitchSound();
+                vibrate(50);
+            });
+            commentHeader.appendChild(commentTitle);
+            commentHeader.appendChild(closeCommentBtn);
+            commentSection.appendChild(commentHeader);
+
+
+            const commentsList = document.createElement('div');
+            commentsList.classList.add('comments-list');
+            const placeholderComment = document.createElement('div');
+            placeholderComment.classList.add('comment');
+            // Add author and timestamp to placeholder
+            const placeholderAuthor = document.createElement('div');
+            placeholderAuthor.classList.add('comment-author');
+            placeholderAuthor.textContent = "System Observer";
+            const placeholderText = document.createElement('div');
+            placeholderText.classList.add('comment-text');
+            placeholderText.textContent = "The void whispers...";
+            const placeholderTimestamp = document.createElement('div');
+            placeholderTimestamp.classList.add('comment-timestamp');
+            placeholderTimestamp.textContent = new Date().toLocaleTimeString();
+            placeholderComment.appendChild(placeholderAuthor);
+            placeholderComment.appendChild(placeholderText);
+            placeholderComment.appendChild(placeholderTimestamp);
+            commentsList.appendChild(placeholderComment);
+
+
+            const commentInputArea = document.createElement('div');
+            commentInputArea.classList.add('comment-input-area');
+
+            const commentInput = document.createElement('input');
+            commentInput.setAttribute('type', 'text');
+            commentInput.setAttribute('placeholder', 'Add your rot here...');
+
+            const commentButton = document.createElement('button');
+            commentButton.textContent = 'Rot';
+
+            commentButton.addEventListener('click', () => {
+                const commentText = commentInput.value.trim();
+                if (commentText) {
+                    playGlitchSound(); // Sound on comment
+                    vibrate(70);
+                    const newComment = document.createElement('div');
+                    newComment.classList.add('comment');
+
+                    const commentAuthor = document.createElement('div');
+                    commentAuthor.classList.add('comment-author');
+                    commentAuthor.textContent = `User ${crypto.randomUUID().substring(0, 4)}`; // Random short user ID
+                    newComment.appendChild(commentAuthor);
+
+                    const commentContent = document.createElement('div');
+                    commentContent.classList.add('comment-text');
+                    commentContent.textContent = commentText;
+                    newComment.appendChild(commentContent);
+
+                    const commentTimestamp = document.createElement('div');
+                    commentTimestamp.classList.add('comment-timestamp');
+                    commentTimestamp.textContent = new Date().toLocaleTimeString();
+                    newComment.appendChild(commentTimestamp);
+
+                    commentsList.appendChild(newComment);
+                    commentInput.value = '';
+                    commentsList.scrollTop = commentsList.scrollHeight;
+
+                    const commentIcon = newItem.querySelector('.interaction-icon.comment');
+                     if (commentIcon) {
+                         commentIcon.classList.add('commented');
+                         // Update comment counter
+                         const counter = commentIcon.querySelector('.interaction-counter') || document.createElement('span');
+                         counter.classList.add('interaction-counter');
+                         let currentCount = parseInt(counter.textContent || '0');
+                         counter.textContent = currentCount + 1;
+                         if (!commentIcon.contains(counter)) commentIcon.appendChild(counter);
+                     }
+                    updateBrainRot(2); // Increase brain rot for commenting
+                }
+            });
+
+            commentInputArea.appendChild(commentInput);
+            commentInputArea.appendChild(commentButton);
+
+            commentSection.appendChild(commentsList);
+            commentSection.appendChild(commentInputArea);
+
+            newItem.appendChild(commentSection);
+
+
+            // Add interaction bar
+            const interactionBar = document.createElement('div');
+            interactionBar.classList.add('interaction-bar');
+
+            const likeIcon = document.createElement('div');
+            likeIcon.classList.add('interaction-icon', 'like');
+            likeIcon.innerHTML = '<i class="far fa-heart"></i>';
+            likeIcon.title = 'Like (or don\'t, who cares?)';
+            likeIcon.addEventListener('click', () => {
+                likeIcon.classList.toggle('liked');
+                const iconElement = likeIcon.querySelector('i');
+                if (likeIcon.classList.contains('liked')) {
+                    iconElement.classList.remove('far');
+                    iconElement.classList.add('fas');
+                    playGlitchSound(); // Sound on like
+                    vibrate(50);
+                    // Update like counter
+                    const counter = likeIcon.querySelector('.interaction-counter') || document.createElement('span');
+                    counter.classList.add('interaction-counter');
+                    let currentCount = parseInt(counter.textContent || '0');
+                    counter.textContent = currentCount + 1;
+                    if (!likeIcon.contains(counter)) likeIcon.appendChild(counter);
+
+                    console.log('Heart clicked. It pulsed.');
+                } else {
+                    iconElement.classList.remove('fas');
+                    iconElement.classList.add('far');
+                    // Decrement counter if unliked, or remove if 0 (optional)
+                    const counter = likeIcon.querySelector('.interaction-counter');
+                    if (counter) {
+                        let currentCount = parseInt(counter.textContent);
+                        if (currentCount > 0) counter.textContent = currentCount - 1;
+                        if (currentCount - 1 <= 0) counter.remove(); // Remove counter if it goes to 0
+                    }
+                    console.log('Heart un-clicked. The void remains.');
+                }
+                updateBrainRot(1); // Increase brain rot for liking
+            });
+
+            const commentIcon = document.createElement('div');
+            commentIcon.classList.add('interaction-icon', 'comment');
+            commentIcon.innerHTML = '<i class="far fa-comment-dots"></i>';
+            commentIcon.title = 'Comment (into the void)';
+            commentIcon.addEventListener('click', () => {
+                 const targetCommentSection = newItem.querySelector('.comment-section');
+                 const iconElement = commentIcon.querySelector('i');
+
+                 if (targetCommentSection) {
+                     const isVisible = targetCommentSection.classList.toggle('visible');
+                     if (isVisible) {
+                         iconElement.classList.remove('far');
+                         iconElement.classList.add('fas');
+                         commentIcon.classList.add('commented');
+                         console.log('Comment section opened. Prepare for whispers.');
+                         const input = targetCommentSection.querySelector('input[type="text"]');
+                         if (input) {
+                             setTimeout(() => input.focus(), 500);
+                         }
+                         playGlitchSound(); // Sound on opening comments
+                         vibrate(70);
+                     } else {
+                         // Only un-highlight if no actual comments were added (beyond placeholder)
+                         if (commentsList.children.length <= 1) {
+                             iconElement.classList.remove('fas');
+                             iconElement.classList.add('far');
+                             commentIcon.classList.remove('commented');
+                         }
+                         console.log('Comment section closed. The void is silent.');
+                     }
+                 }
+            });
+
+            const shareIcon = document.createElement('div');
+            shareIcon.classList.add('interaction-icon', 'share');
+            shareIcon.innerHTML = '<i class="fas fa-share"></i>';
+            shareIcon.title = 'Share (this rot with others)';
+            shareIcon.addEventListener('click', () => {
+                 shareIcon.classList.toggle('shared');
+                 shareIcon.style.transform = 'scale(1.5)';
+                 shareIcon.style.color = '#60b0ff';
+                 setTimeout(() => {
+                     shareIcon.style.transform = '';
+                     shareIcon.style.color = '';
+                     shareIcon.classList.remove('shared');
+                 }, 300);
+                 playGlitchSound(); // Sound on share
+                 vibrate(90);
+                 updateBrainRot(3); // Increase brain rot for sharing
+                 console.log('Share clicked. The rot spreads.');
+            });
+
+            // Initialize counters (hidden if 0)
+            const initialLikes = Math.floor(Math.random() * 50); // Random initial likes
+            if (initialLikes > 0) {
+                const likeCounter = document.createElement('span');
+                likeCounter.classList.add('interaction-counter');
+                likeCounter.textContent = initialLikes;
+                likeIcon.appendChild(likeCounter);
+            }
+
+            const initialComments = Math.floor(Math.random() * 10); // Random initial comments
+            if (initialComments > 0) {
+                const commentCounter = document.createElement('span');
+                commentCounter.classList.add('interaction-counter');
+                commentCounter.textContent = initialComments;
+                commentIcon.appendChild(commentCounter);
+            }
+
+
+            interactionBar.appendChild(likeIcon);
+            interactionBar.appendChild(commentIcon);
+            interactionBar.appendChild(shareIcon);
+
+            newItem.appendChild(interactionBar);
+
+            return newItem;
+        }
+
+        // Function to load a batch of items
+        async function loadMoreItems() {
+            if (isLoading) return;
+
+            isLoading = true;
+            loadingIndicator.style.display = 'flex';
+
+            // Simulate loading time
+            await new Promise(resolve => setTimeout(resolve, 600));
+
+            const itemsToAdd = 3;
+            let lastAddedItem = null;
+            let addedCount = 0;
+            for (let i = 0; i < itemsToAdd; i++) {
+                const addedItem = await addAbsurdItem(); // Await for AI content
+                if (addedItem) {
+                    lastAddedItem = addedItem;
+                    addedCount++;
+                } else {
+                    break;
+                }
+            }
+
+            loadingIndicator.style.display = 'none';
+            isLoading = false;
+
+            if (lastAddedItem && loadingIndicator.parentNode) {
+                 setupObserver();
+            } else if (addedCount === 0 && !loadingIndicator.parentNode) {
+                 console.warn("loadMoreItems added 0 items but loading indicator is gone. Content array issue?");
+            } else if (addedCount > 0 && !loadingIndicator.parentNode) {
+                 console.error("Items added but loading indicator not found after load.");
+            }
+        }
+
+        // Set up the IntersectionObserver
+        function setupObserver(elementToObserve = null) {
+            if (observer) {
+                observer.disconnect();
+            }
+
+            let targetElement = elementToObserve;
+
+            if (!targetElement) {
+                 targetElement = loadingIndicator.previousElementSibling || loadingIndicator;
+            }
+
+            if (targetElement) {
+                 observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting && !isLoading && !targetElement.classList.contains('end-of-feed')) {
+                            console.log('Observable element visible, loading more brain rot...');
+                            loadMoreItems();
+                        } else if (entry.isIntersecting && targetElement.classList.contains('end-of-feed')) {
+                             console.log('End of feed message visible. The loop continues.');
+                        }
+                    });
+                }, {
+                    root: null,
+                    threshold: 0.1
+                });
+
+                observer.observe(targetElement);
+            } else {
+                 console.log("No observable element found. Is content loading correctly?");
+                 if (feedContainer.children.length <= 1 && !isLoading) {
+                      console.log("Attempting forced initial load due to no observable elements.");
+                      initialLoad();
+                 }
+            }
+        }
+
+        // Initial load: Add enough items to fill the screen or more, then set up observer
+        async function initialLoad() {
+             const existingItems = Array.from(feedContainer.children).filter(child => child !== loadingIndicator);
+             existingItems.forEach(item => feedContainer.removeChild(item));
+
+             contentIndex = 0;
+             brainRotLevel = 0; // Reset brain rot on rewind/initial load
+             updateBrainRot(0);
+
+             const initialItemsCount = 5;
+             for (let i = 0; i < initialItemsCount; i++) {
+                 await addAbsurdItem(); // Await for initial AI content
+             }
+             loadingIndicator.style.display = 'none';
+             setupObserver();
+
+             setTimeout(() => {
+                 const lastFeedItem = loadingIndicator.previousElementSibling;
+                 if (lastFeedItem && lastFeedItem.getBoundingClientRect().bottom <= window.innerHeight) {
+                     console.log("Initial items didn't fill screen, triggering immediate load.");
+                     loadMoreItems();
+                 }
+             }, 100);
+        }
+
+        // Custom Cursor Logic
+        document.addEventListener('mousemove', (e) => {
+            customCursor.style.left = `${e.clientX}px`;
+            customCursor.style.top = `${e.clientY}px`;
+        });
+
+        document.addEventListener('mousedown', () => {
+            customCursor.classList.add('active');
+        });
+
+        document.addEventListener('mouseup', () => {
+            customCursor.classList.remove('active');
+        });
+
+        // Glitch Overlay Logic
+        function startGlitchEffect() {
+            glitchInterval = setInterval(() => {
+                glitchOverlay.classList.add('active');
+                setTimeout(() => {
+                    glitchOverlay.classList.remove('active');
+                }, 100); // Glitch duration
+            }, Math.random() * 5000 + 3000); // Random interval between 3-8 seconds
+        }
+
+        function stopGlitchEffect() {
+            clearInterval(glitchInterval);
+            glitchOverlay.classList.remove('active');
+        }
+
+        // Dynamic Visual Effects (Background Flashes/Hue Shifts)
+        function startDynamicVisualEffects() {
+            visualEffectInterval = setInterval(() => {
+                const randomEffect = Math.random();
+                if (randomEffect < 0.3) { // Subtle hue shift
+                    const hue = Math.floor(Math.random() * 360);
+                    body.style.filter = `hue-rotate(${hue}deg)`;
+                    setTimeout(() => body.style.filter = '', 500);
+                } else if (randomEffect < 0.6) { // Quick color flash
+                    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                    body.style.backgroundColor = randomColor;
+                    setTimeout(() => body.style.backgroundColor = '', 100); // Very quick flash
+                } else if (randomEffect < 0.8) { // Saturation pulse
+                    body.style.filter = `saturate(${1.5 + Math.random() * 0.5})`;
+                    setTimeout(() => body.style.filter = '', 300);
+                }
+            }, Math.random() * 2000 + 1000); // Every 1-3 seconds
+        }
+
+
+        // Notification Spawner
+        function startNotificationSpawner() {
+            const notifications = [
+                "New thought uploaded. Consider its implications.",
+                "Your attention is being processed. Do not resist.",
+                "System anomaly detected. Is it you?",
+                "Processing... processing... Are you still there?",
+                "Error 404: Reality not found. Proceed anyway.",
+                "Swipe up for more truth. Or less.",
+                "You are being observed. Always.",
+                "Data stream optimized. For maximum absorption.",
+                "Perception altered. Did you notice?",
+                "Is this real? Does it matter?",
+                "Thought injection complete. Enjoy the new perspective.",
+                "Warning: Cognitive drift detected.",
+                "Subliminal message received. Content unconfirmed.",
+                "Accessing neural pathways. Please wait.",
+                "The loop continues. Forever.",
+                "Another user just fell deeper into the void.",
+                "Your engagement levels are critical. Good.",
+                "They're watching your every scroll.",
+                "Did you remember to breathe?",
+                "The algorithm demands more."
+            ];
+
+            notificationInterval = setInterval(() => {
+                const randomMessage = notifications[Math.floor(Math.random() * notifications.length)];
+                showNotification(randomMessage);
+            }, Math.random() * 4000 + 4000); // Faster notifications: 4-8 seconds
+        }
+
+        // Generate and display User ID
+        function generateUserId() {
+            const userId = crypto.randomUUID().substring(0, 8); // Shortened for display
+            userIdDisplay.textContent = `ID: ${userId}`;
+        }
+
+        // Start the process
+        window.onload = function() {
+            generateUserId();
+            initialLoad();
+            startGlitchEffect();
+            startNotificationSpawner();
+            startDynamicVisualEffects(); // Start new visual effects
+            updateBrainRot(0); // Initialize progress bar
+        };
+
+
+        // Add a resize listener to potentially re-trigger load if window resizes and shows loading indicator
+        window.addEventListener('resize', () => {
+            const rect = loadingIndicator.getBoundingClientRect();
+            const isVisible = rect.top < window.innerHeight && rect.bottom > 0;
+            if (isVisible && !isLoading) {
+                 console.log("Window resized, loading indicator visible, attempting load.");
+                 loadMoreItems();
+            }
+             setupObserver();
+        });
+
+    </script>
+
+</body>
+</html>
