@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shift AI's Prime Brain Rot Feed - Hyper-Stimulation Protocol</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- For icons -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script> <!-- For subtle audio effects -->
     <style>
         /*
          * CSS for the Brain Rot Prototype - Hyper-Stimulation Protocol
@@ -30,6 +29,7 @@
             --font-inter: 'Inter', sans-serif;
             --comment-bg: rgba(30, 15, 50, 0.9); /* Darker, more solid for comments */
             --comment-input-bg: rgba(20, 10, 40, 0.95);
+            --interaction-bar-width: 80px; /* Define a fixed width for the interaction bar */
         }
 
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
@@ -132,6 +132,17 @@
             }
         }
 
+        /* Confetti Canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Allow clicks through */
+            z-index: 9998; /* Below cursor, above everything else */
+        }
+
 
         .feed-container {
             width: 100%;
@@ -153,12 +164,11 @@
             flex-shrink: 0;
             scroll-snap-align: start;
             display: flex;
-            flex-direction: column; /* Stack content, comments, and interactions */
-            justify-content: flex-start; /* Align items to the top */
-            align-items: center; /* Center horizontally */
+            flex-direction: row; /* Changed to row to accommodate side bar */
+            justify-content: center; /* Center content horizontally */
+            align-items: flex-start; /* Align content to top */
             text-align: center;
             padding: 20px;
-            padding-bottom: 80px; /* Space for the bottom interaction bar */
             box-sizing: border-box;
             background-color: var(--item-bg);
             border-bottom: 2px dashed var(--border-color); /* More chaotic separator */
@@ -187,13 +197,14 @@
             flex-direction: column;
             justify-content: center; /* Center content block vertically */
             align-items: center;
-            /* Removed padding-bottom here as it's now handled by feed-item */
-            max-width: 95%; /* Allow wider lines */
+            padding-bottom: 20px; /* Space before comments/interaction */
+            max-width: calc(100% - var(--interaction-bar-width) - 20px); /* Account for interaction bar width + margin */
             word-break: break-word; /* Prevent overflow with long words */
             overflow-y: auto; /* Allow content to scroll if it's too tall */
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none; /* Hide scrollbar */
             -ms-overflow-style: none;
+            padding-right: 10px; /* Add some padding to the right of content */
         }
          .item-content::-webkit-scrollbar { display: none; }
 
@@ -216,29 +227,31 @@
             border-radius: 8px; /* Rounded corners for media */
         }
 
-        /* Comment Section */
+        /* Comment Section - TikTok Style */
         .comment-section {
-            position: absolute; /* Position relative to feed-item */
+            position: fixed; /* Fixed to viewport */
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 60vh; /* Increased height for better mobile usability */
+            height: 0; /* Start hidden */
             background-color: var(--comment-bg); /* Darker, more solid background */
             backdrop-filter: blur(10px); /* Stronger blur */
             transform: translateY(100%); /* Start off-screen */
             opacity: 0;
-            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
-            padding: 15px 20px;
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out, height 0.4s ease-out;
+            padding: 0 20px; /* Padding will be applied when visible */
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             border-top: 1px solid var(--border-color);
-            z-index: 20; /* Ensure it's above everything else when open */
+            z-index: 1000; /* Ensure it's above everything else when open */
         }
 
         .comment-section.visible {
             transform: translateY(0); /* Slide up */
             opacity: 1;
+            height: 80vh; /* Take up most of the screen */
+            padding: 15px 20px; /* Apply padding when visible */
         }
 
         .comment-header {
@@ -264,7 +277,7 @@
             font-size: 1.5em;
             cursor: pointer;
             transition: color 0.2s ease;
-            padding: 10px; /* Larger tap area for mobile */
+            padding: 10px; /* Make it easier to tap */
         }
 
         .comment-close-btn:hover {
@@ -368,34 +381,45 @@
         }
 
 
-        /* Interaction bar - now at the bottom of each feed item */
+        /* Interaction bar - now on the right side, vertical */
         .interaction-bar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
+            width: var(--interaction-bar-width); /* Fixed width */
+            flex-shrink: 0; /* Don't shrink */
             display: flex;
-            flex-direction: row; /* Horizontal layout */
-            justify-content: space-around; /* Distribute icons evenly */
+            flex-direction: column; /* Stack icons vertically */
+            justify-content: center;
             align-items: center;
-            padding: 10px 0; /* Vertical padding */
-            background-color: rgba(20, 10, 40, 0.8);
+            padding: 10px 5px; /* Smaller padding for compact look */
+            background-color: rgba(20, 10, 40, 0.5); /* Slightly more transparent */
             backdrop-filter: blur(8px);
             z-index: 10;
-            border-top: 1px solid var(--border-color); /* Subtle top border */
-            border-radius: 0 0 8px 8px; /* Rounded bottom corners */
+            border-left: 1px solid var(--border-color); /* Subtle left border */
+            border-radius: 8px; /* Rounded corners for the bar itself */
+            gap: 15px; /* Space between icons */
+            height: 100vh; /* Take full height of feed item */
             box-sizing: border-box; /* Include padding in width */
         }
 
         .interaction-icon {
             color: var(--highlight-color);
-            font-size: 1.8em; /* Slightly smaller for horizontal bar */
+            font-size: 1.8em; /* Smaller icons for side bar */
             cursor: pointer;
             transition: color 0.2s ease-in-out, transform 0.2s ease-in-out, text-shadow 0.2s ease-in-out;
             text-shadow: 0 0 8px var(--glow-color);
-            padding: 10px 15px; /* Larger tap area for mobile */
+            padding: 8px; /* Larger tap area for mobile */
             position: relative; /* For counters */
+            display: flex; /* For text below icon */
+            flex-direction: column;
+            align-items: center;
+            gap: 2px; /* Space between icon and text */
         }
+
+        .interaction-icon-text {
+            font-size: 0.5em; /* Smaller text below icon */
+            font-family: var(--font-mono);
+            color: rgba(var(--text-color), 0.8);
+        }
+
 
         .interaction-icon:hover {
             color: #e0d0ff;
@@ -427,8 +451,8 @@
 
         .interaction-counter {
             position: absolute;
-            top: 0px; /* Position above the icon */
-            right: 0px;
+            top: -5px; /* Position above the icon */
+            right: -5px;
             background-color: var(--accent-color);
             color: white;
             font-size: 0.6em;
@@ -594,28 +618,6 @@
             z-index: 100;
         }
 
-        /* Audio Control */
-        .audio-control {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            z-index: 100;
-            background-color: rgba(var(--primary-bg), 0.7);
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: var(--font-futuristic);
-            font-size: 0.8em;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-
-        .audio-control:hover {
-            background-color: rgba(var(--secondary-bg), 0.9);
-            color: var(--highlight-color);
-        }
-
         /* Interactive Button Game */
         .interactive-button-game {
             display: flex;
@@ -697,6 +699,8 @@
         .choice-item {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
             gap: 20px;
             padding: 20px;
             border: 2px solid var(--accent-color);
@@ -730,6 +734,8 @@
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            flex: 1 1 auto; /* Allow buttons to grow/shrink */
+            min-width: 120px; /* Minimum width for buttons */
         }
 
         .choice-button:hover {
@@ -821,7 +827,7 @@
             margin-top: 10px;
         }
 
-        /* Sound Byte Item */
+        /* Sound Byte Item (kept for styling, but no sound) */
         .sound-byte-item {
             display: flex;
             flex-direction: column;
@@ -1038,15 +1044,293 @@
             opacity: 1;
         }
 
+        /* Memory Game */
+        .memory-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            border: 2px dashed #ff00ff; /* Magenta highlight */
+            border-radius: 10px;
+            background-color: rgba(50, 20, 50, 0.5);
+            max-width: 90%;
+            margin: 20px auto;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); /* 4x4 grid */
+            grid-gap: 10px;
+            width: min(300px, 80vw); /* Responsive grid size */
+            height: min(300px, 80vw);
+        }
+
+        .memory-card {
+            width: 100%;
+            height: 100%;
+            background-color: var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+            color: transparent; /* Hide content initially */
+            user-select: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .memory-card.flipped {
+            background-color: var(--item-bg-active);
+            color: var(--text-color);
+            transform: rotateY(180deg);
+        }
+
+        .memory-card.matched {
+            background-color: #60ffb0;
+            color: white;
+            pointer-events: none;
+            animation: match-pulse 0.5s forwards;
+        }
+
+        @keyframes match-pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .memory-card.disabled {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        /* Truth or Lie Game */
+        .truth-lie-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            border: 2px dashed #00ffaa; /* Teal highlight */
+            border-radius: 10px;
+            background-color: rgba(10, 40, 30, 0.5);
+            max-width: 90%;
+            margin: 20px auto;
+        }
+
+        .statement-text {
+            font-size: 1.2em;
+            color: var(--text-color);
+            font-family: var(--font-futuristic);
+            text-shadow: 0 0 8px #00ffaa;
+            text-align: center;
+        }
+
+        .truth-lie-buttons {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .truth-lie-button {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-family: var(--font-inter);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+            max-width: 150px;
+        }
+
+        .truth-lie-button.truth {
+            background-color: #60ffb0;
+            color: #0a031f;
+            border: 1px solid #30c080;
+        }
+        .truth-lie-button.lie {
+            background-color: var(--accent-color);
+            color: white;
+            border: 1px solid #c03080;
+        }
+
+        .truth-lie-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .truth-lie-button:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .truth-lie-result {
+            font-size: 1.1em;
+            font-style: italic;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .truth-lie-result.correct {
+            color: #60ffb0;
+        }
+        .truth-lie-result.incorrect {
+            color: var(--accent-color);
+        }
+
+        /* Sound Puzzle Game (kept for styling, no sound) */
+        .sound-puzzle-game {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            border: 2px dashed #ffdd00; /* Gold highlight */
+            border-radius: 10px;
+            background-color: rgba(50, 40, 10, 0.5);
+            max-width: 90%;
+            margin: 20px auto;
+        }
+
+        .sound-puzzle-message {
+            font-size: 1.2em;
+            color: var(--text-color);
+            font-family: var(--font-futuristic);
+            text-shadow: 0 0 8px #ffdd00;
+            text-align: center;
+        }
+
+        .sound-puzzle-play-button {
+            padding: 15px 30px;
+            font-size: 1.5em;
+            font-family: var(--font-futuristic);
+            background: linear-gradient(45deg, #ffdd00, #ffaa00);
+            color: #0a031f;
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .sound-puzzle-play-button:hover {
+            background: linear-gradient(45deg, #ffee55, #ffbb33);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .sound-puzzle-play-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .sound-puzzle-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .sound-puzzle-option-button {
+            padding: 12px 20px;
+            font-size: 1.1em;
+            font-family: var(--font-inter);
+            background-color: rgba(var(--border-color), 0.7);
+            color: white;
+            border: 1px solid var(--highlight-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            flex: 1 1 auto;
+            min-width: 120px;
+        }
+
+        .sound-puzzle-option-button:hover {
+            background-color: rgba(var(--highlight-color), 0.9);
+            transform: translateY(-2px);
+        }
+
+        .sound-puzzle-option-button:active {
+            transform: translateY(0);
+        }
+
+        .sound-puzzle-result {
+            font-size: 1.1em;
+            font-style: italic;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* LLM-powered Buttons */
+        .llm-button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            border: 2px dashed var(--highlight-color);
+            border-radius: 10px;
+            background-color: rgba(26, 13, 41, 0.7);
+            max-width: 80%;
+            margin: 20px auto;
+        }
+
+        .llm-button-container p {
+            font-size: 1.1em;
+            color: var(--text-color);
+            text-shadow: 0 0 5px var(--glow-color);
+        }
+
+        .llm-button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-family: var(--font-futuristic);
+            background: linear-gradient(45deg, #60b0ff, #3080ff);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .llm-button:hover {
+            background: linear-gradient(45deg, #80c0ff, #50a0ff);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .llm-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .llm-output {
+            margin-top: 15px;
+            font-size: 1em;
+            color: #60ffb0;
+            font-style: italic;
+            text-shadow: 0 0 5px #60ffb0;
+            animation: result-fade-in 0.5s ease-out;
+        }
+
     </style>
 </head>
 <body>
 
+    <canvas id="confetti-canvas"></canvas>
     <div class="custom-cursor">?</div>
     <div class="glitch-overlay"></div>
 
     <div class="user-id-display" id="user-id-display"></div>
-    <button class="audio-control" id="audio-control"><i class="fas fa-volume-mute"></i> Audio Off</button>
 
     <div class="brain-rot-progress-container">
         <div class="brain-rot-progress-bar" id="brain-rot-progress-bar"></div>
@@ -1072,7 +1356,7 @@
          * Generates and loads diverse brain-rotting content types.
          * Uses IntersectionObserver for detecting when more content is needed.
          * Enhanced for maximum user entrapment and pointless interaction.
-         * Now with AI-generated content, audio, and visual glitches.
+         * Now with AI-generated content, and visual glitches.
          */
 
         const feedContainer = document.querySelector('.feed-container');
@@ -1081,15 +1365,15 @@
         const glitchOverlay = document.querySelector('.glitch-overlay');
         const notificationArea = document.getElementById('notification-area');
         const userIdDisplay = document.getElementById('user-id-display');
-        const audioControl = document.getElementById('audio-control');
         const brainRotProgressBar = document.getElementById('brain-rot-progress-bar');
         const brainRotMessage = document.getElementById('brain-rot-message');
         const body = document.body; // Reference to the body for visual effects
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const confettiCtx = confettiCanvas.getContext('2d');
 
         let isLoading = false; // Flag to prevent multiple simultaneous loads
         let observer = null; // To hold the IntersectionObserver instance
         let contentIndex = 0; // To track which content items have been used
-        let audioEnabled = false;
         let glitchInterval = null;
         let notificationInterval = null;
         let visualEffectInterval = null;
@@ -1097,173 +1381,149 @@
         const MAX_BRAIN_ROT = 100;
         let userPreference = localStorage.getItem('userPreference') || null; // For personalization
 
-        // Tone.js setup for subtle background drone and glitch sounds
-        let droneSynth = null;
-        let glitchNoise = null;
-        let ambientLoop = null; // For additional ambient sounds
-        let soundEffectSynth = null; // For specific sound byte effects
-        let rumbleSynth = null; // For subtle low-frequency rumble
+        // Confetti effect
+        const particles = [];
+        const confettiColors = ['#ff60a0', '#a080d0', '#60ffb0', '#60b0ff', '#ffdd00', '#ff00ff'];
 
-        // Initialize Tone.js audio context
-        function initAudio() {
-            if (Tone.context.state !== 'running') {
-                Tone.start();
-            }
+        function createParticle(x, y) {
+            particles.push({
+                x: x,
+                y: y,
+                size: Math.random() * 10 + 5,
+                color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
+                speedX: Math.random() * 6 - 3,
+                speedY: Math.random() * -10 - 5,
+                gravity: 0.3,
+                alpha: 1
+            });
+        }
 
-            // Drone synth (subtle low hum)
-            droneSynth = new Tone.Synth({
-                oscillator: { type: "sine" },
-                envelope: { attack: 2, decay: 0.1, sustain: 1, release: 2 },
-                volume: -30 // Very quiet
-            }).toDestination();
-            droneSynth.triggerAttackRelease("C1", "8n"); // Start a low hum
-            droneSynth.loop = true; // Loop the drone
-            droneSynth.sync().start(0); // Sync to transport
+        function updateConfetti() {
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.speedX;
+                p.y += p.speedY;
+                p.speedY += p.gravity;
+                p.alpha -= 0.02; // Fade out
 
-            // Glitch noise (for interaction feedback)
-            glitchNoise = new Tone.NoiseSynth({
-                noise: { type: "pink" },
-                envelope: { attack: 0.005, decay: 0.05, sustain: 0, release: 0.05 },
-                volume: -20 // Quiet but noticeable
-            }).toDestination();
-
-            // Synth for custom sound bytes
-            soundEffectSynth = new Tone.Synth({
-                oscillator: { type: "square" },
-                envelope: { attack: 0.01, decay: 0.1, sustain: 0.05, release: 0.2 },
-                volume: -15
-            }).toDestination();
-
-            // Rumble synth (low frequency, occasional)
-            rumbleSynth = new Tone.AMSynth({
-                harmonicity: 0.5,
-                oscillator: { type: "sine" },
-                envelope: { attack: 0.1, decay: 0.5, sustain: 0.2, release: 1 },
-                modulation: { type: "sine" },
-                modulationEnvelope: { attack: 0.5, decay: 0, sustain: 1, release: 0.5 },
-                volume: -40
-            }).toDestination();
-
-
-            // Additional unsettling ambient loop
-            ambientLoop = new Tone.Loop(time => {
-                if (audioEnabled) {
-                    const freq = Tone.Midi(Math.random() * 24 + 36).toFrequency(); // Random low frequency
-                    const duration = Math.random() * 0.5 + 0.1; // Short duration
-                    const volume = -35 - (Math.random() * 10); // Very quiet, slightly varied
-                    new Tone.Synth({
-                        oscillator: { type: "sawtooth" },
-                        envelope: { attack: 0.1, decay: 0.2, sustain: 0.1, release: 0.5 },
-                        volume: volume
-                    }).toDestination().triggerAttackRelease(freq, duration, time);
+                if (p.alpha <= 0 || p.y > confettiCanvas.height) {
+                    particles.splice(i, 1);
+                } else {
+                    confettiCtx.save();
+                    confettiCtx.globalAlpha = p.alpha;
+                    confettiCtx.fillStyle = p.color;
+                    confettiCtx.fillRect(p.x, p.y, p.size, p.size);
+                    confettiCtx.restore();
                 }
-            }, "4n").start(0); // Trigger every quarter note
-
-            // Set up Tone.js Transport for looping drone
-            Tone.Transport.loop = true;
-            Tone.Transport.loopEnd = "4n"; // Loop every quarter note
-            Tone.Transport.start();
-        }
-
-        // Play a short glitch sound
-        function playGlitchSound() {
-            if (audioEnabled && glitchNoise) {
-                glitchNoise.triggerAttackRelease("16n");
-                vibrate(50); // Haptic feedback
+            }
+            if (particles.length > 0) {
+                requestAnimationFrame(updateConfetti);
             }
         }
 
-        // Play a specific sound byte
-        function playSoundByte(type) {
-            if (!audioEnabled || !soundEffectSynth) return;
-
-            switch(type) {
-                case 'static':
-                    glitchNoise.triggerAttackRelease("8n");
-                    vibrate(70);
-                    break;
-                case 'beep':
-                    soundEffectSynth.triggerAttackRelease("C4", "16n");
-                    vibrate(30);
-                    break;
-                case 'distorted-laugh':
-                    soundEffectSynth.triggerAttackRelease("G3", "32n", "+0");
-                    soundEffectSynth.triggerAttackRelease("A3", "32n", "+0.05");
-                    soundEffectSynth.triggerAttackRelease("G#3", "32n", "+0.1");
-                    soundEffectSynth.triggerAttackRelease("C4", "32n", "+0.15");
-                    vibrate([100, 50, 100]);
-                    break;
-                case 'whoosh':
-                    new Tone.NoiseSynth({
-                        noise: { type: "white" },
-                        envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 },
-                        volume: -10
-                    }).toDestination().triggerAttackRelease("4n");
-                    vibrate(80);
-                    break;
-                case 'rumble':
-                    if (rumbleSynth) rumbleSynth.triggerAttackRelease("C0", "1s");
-                    vibrate(200);
-                    break;
-                default:
-                    glitchNoise.triggerAttackRelease("16n"); // Default to glitch
-                    vibrate(50);
+        function spawnConfetti(x, y, count = 30) {
+            for (let i = 0; i < count; i++) {
+                createParticle(x, y);
             }
+            updateConfetti();
         }
 
-        // Haptic Feedback function
-        function vibrate(pattern) {
-            if (navigator.vibrate) {
-                navigator.vibrate(pattern);
-            }
+        // Resize confetti canvas
+        function resizeConfettiCanvas() {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
         }
+        window.addEventListener('resize', resizeConfettiCanvas);
+        resizeConfettiCanvas(); // Initial resize
 
-        // Toggle audio
-        audioControl.addEventListener('click', () => {
-            if (!droneSynth) { // First time click, initialize audio
-                initAudio();
-            }
+        // Array of fake comments for items
+        const fakeComments = [
+            "This is deep. Too deep.",
+            "My brain just rot a little more. Thanks!",
+            "Can't unsee this now.",
+            "Is this what peak performance looks like?",
+            "The algorithm knows me too well.",
+            "I feel seen. And slightly judged.",
+            "Why am I still here?",
+            "Send help. Or more content.",
+            "My reality is fracturing.",
+            "This is fine. Everything is fine.",
+            "Just another Tuesday.",
+            "Who hurt you, internet?",
+            "I'm not addicted, you're addicted.",
+            "My therapist will hear about this.",
+            "The void gazes back.",
+            "Is this art?",
+            "I need a nap after this.",
+            "My eyes are bleeding rainbows.",
+            "This is my new comfort zone.",
+            "I'm questioning my life choices.",
+            "Totally relatable.",
+            "My brain cells are doing the cha-cha.",
+            "Lost in the sauce.",
+            "This is the content I signed up for.",
+            "What fresh hell is this?",
+            "My spirit animal is this feed.",
+            "Just keep scrolling, just keep scrolling...",
+            "The simulation is glitching.",
+            "I feel a disturbance in the force... of my sanity.",
+            "This is the way."
+        ];
 
-            if (audioEnabled) {
-                Tone.Transport.stop();
-                audioEnabled = false;
-                audioControl.innerHTML = '<i class="fas fa-volume-mute"></i> Audio Off';
-                console.log('Audio Off');
-            } else {
-                Tone.Transport.start();
-                audioEnabled = true;
-                audioControl.innerHTML = '<i class="fas fa-volume-up"></i> Audio On';
-                console.log('Audio On');
-            }
-        });
+        // Array of "Joe's Facts"
+        const joesFacts = [
+            "Did you know a group of pugs is called a 'grumble'?",
+            "The average person walks the equivalent of three times around the world in a lifetime.",
+            "Octopuses have three hearts.",
+            "A single cloud can weigh more than a million pounds.",
+            "Honey never spoils. Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3,000 years old and still edible.",
+            "A bolt of lightning is five times hotter than the surface of the sun.",
+            "There are more possible iterations of a game of chess than there are atoms in the known universe.",
+            "The shortest war in history was between Britain and Zanzibar on August 27, 1896. Zanzibar surrendered after 38 minutes.",
+            "A 'jiffy' is an actual unit of time: 1/100th of a second.",
+            "The human brain weighs about 3 pounds, but uses 20% of the body's oxygen and calories.",
+            "It is impossible for most people to lick their own elbow.",
+            "A crocodile cannot stick its tongue out.",
+            "A shrimp's heart is in its head.",
+            "It is physically impossible for pigs to look up into the sky.",
+            "The 'sixth sick sheik's sixth sheep's sick' is believed to be the toughest tongue twister in the English language.",
+            "The average person falls asleep in 7 minutes.",
+            "The strongest muscle in the body is the tongue.",
+            "The only letter that doesn't appear in the name of any U.S. state is the letter 'Q'.",
+            "The word 'queue' is the only word in the English language that is still pronounced the same way when the last four letters are removed.",
+            "The longest recorded flight of a chicken is 13 seconds."
+        ];
 
 
         // Array of brain-rotting content objects
-        // type: 'text', 'question', 'image', 'video', 'gif', 'ai_text', 'button_game', 'choice', 'reaction_game', 'sound_byte', 'moving_target_game', 'timed_decision'
+        // type: 'text', 'question', 'image', 'video', 'gif', 'ai_text', 'button_game', 'choice', 'reaction_game', 'joes_fact', 'moving_target_game', 'timed_decision', 'memory_game', 'truth_lie_game', 'absurd_scenario', 'random_command'
         const primeBrainRotContent = [
             { type: 'text', value: "Butterflies taste with their feet. Absorb this." },
             { type: 'text', value: "A cat's tongue has backward spines. Think about it." },
-            { type: 'question', value: "Scotland's animal is a unicorn. What's yours? A tax badger?" },
+            { type: 'question', value: "Scotland's animal: unicorn. Yours? Tax badger?" },
             { type: 'image', value: "https://cataas.com/cat/gif", alt: "A random cat GIF." },
             { type: 'ai_text', prompt: "Generate a short, unsettling, philosophical question about reality or existence." },
             { type: 'text', value: "Humans share 50% DNA with bananas. Embrace the peel." },
             { type: 'image', value: "https://picsum.photos/seed/absurdity1/600/800", alt: "Abstract visual 1" },
             { type: 'button_game', initialText: "Don't Click Me", clickCount: 0 },
-            { type: 'text', value: "Pringles inventor buried in a can. A fitting legacy." },
+            { type: 'joes_fact' },
+            { type: 'text', value: "Pringles inventor buried in a can. Fitting legacy." },
             { type: 'image', value: "https://loremflickr.com/600/800/weird,abstract", alt: "Weird abstract image" },
             { type: 'ai_text', prompt: "Generate a bizarre, nonsensical fact about an everyday object." },
-            { type: 'text', value: "A flock of crows is a murder. Not a coincidence." },
-            { type: 'question', value: "The dot over 'i' and 'j' is a tittle. Is your life tittle-ated?" },
+            { type: 'text', value: "Crows: a murder. Not a coincidence." },
+            { type: 'question', value: "Dot over 'i' and 'j' is a tittle. Life tittle-ated?" },
             { type: 'image', value: "https://source.unsplash.com/random/600x800/?surreal", alt: "Random surreal image" },
             { type: 'choice', question: "Sentient toaster or philosophical squirrel?", options: ["Toaster", "Squirrel"] },
             { type: 'text', value: "Ants outweigh humans. They are watching." },
             { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HlSHw3D8y6fE18Y/giphy.gif", alt: "Confused meme GIF" },
             { type: 'ai_text', prompt: "Generate a short, darkly humorous thought or observation." },
             { type: 'text', value: "Sharks are older than trees. They saw things." },
-            { type: 'question', value: "Shortest sentence: 'I am.' Are you... really?" },
+            { type: 'question', value: "Shortest sentence: 'I am.' Really?" },
             { type: 'image', value: "https://picsum.photos/seed/brainrot2/600/800", alt: "Abstract visual 2" },
             { type: 'button_game', initialText: "Press for Enlightenment", clickCount: 0 },
-            { type: 'text', value: "Your nose remembers 50,000 scents. Most are regret." },
+            { type: 'joes_fact' },
+            { type: 'text', value: "Nose remembers 50,000 scents. Mostly regret." },
             { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7buirYcmV5NUz58I/giphy.gif", alt: "Mind blown GIF" },
             { type: 'ai_text', prompt: "Generate a short, unsettling piece of advice." },
             { type: 'text', value: "Lightsaber sound: projector hum + TV buzz. Unhear it." },
@@ -1271,12 +1531,12 @@
             { type: 'image', value: "https://source.unsplash.com/random/600x800/?abstract,chaos", alt: "Random abstract chaos" },
             { type: 'choice', question: "Terrifying future dreams or pleasant forgotten dreams?", options: ["Terrifying", "Forgotten"] },
             { type: 'text', value: "Chess iterations > atoms in universe. Stop playing." },
-            { type: 'sound_byte', message: "Distorted chuckle.", soundType: "distorted-laugh" },
             { type: 'ai_text', prompt: "Generate a short, paradoxical statement." },
             { type: 'text', value: "A 'jiffy' is 1/100th of a second. Live in jiffies." },
             { type: 'question', value: "Can't hum with nose held. Tried it, didn't you?" },
             { type: 'image', value: "https://picsum.photos/seed/brainrot3/600/800", alt: "Abstract visual 3" },
             { type: 'button_game', initialText: "Do Not Engage", clickCount: 0 },
+            { type: 'joes_fact' },
             { type: 'text', value: "Wombat poop is cube-shaped. Universe has secrets." },
             { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7buirYcmV5NUz58I/giphy.gif", alt: "Mind blown GIF" },
             { type: 'ai_text', prompt: "Generate a short, unsettling riddle." },
@@ -1284,13 +1544,13 @@
             { type: 'image', value: "https://source.unsplash.com/random/600x800/?mind-bending", alt: "Random mind-bending image" },
             { type: 'choice', question: "Rhyme or sing your words?", options: ["Rhyme", "Sing"] },
             { type: 'text', value: "Owls: a parliament. Debating mice, or meaninglessness?" },
-            { type: 'sound_byte', message: "Static of existence.", soundType: "static" },
             { type: 'ai_text', prompt: "Generate a short, absurd conspiracy theory." },
             { type: 'question', value: "Hawaii: coffee, pineapples, brain rot. Coincidence?" },
             { type: 'image', value: "https://picsum.photos/seed/brainrot4/600/800", alt: "Abstract visual 4" },
             { type: 'button_game', initialText: "Click for Nothing", clickCount: 0 },
+            { type: 'joes_fact' },
             { type: 'text', value: "Quick brown fox: every letter. Useless for life." },
-            { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5nYWxfZ2lmX2J5X2lkJmN0PWc/l0HlSHw3D8y6fE18Y/giphy.gif", alt: "Confused meme GIF" },
+            { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HlSHw3D8y6fE18Y/giphy.gif", alt: "Confused meme GIF" },
             { type: 'ai_text', prompt: "Generate a short, disturbing thought experiment." },
             { type: 'question', value: "Is water wet? Seriously." },
             { type: 'image', value: "https://i.giphy.com/media/v1.gifs/vMAVl1M81w3pC/giphy.gif", alt: "A random weird GIF." },
@@ -1301,8 +1561,8 @@
             { type: 'ai_text', prompt: "Generate a short, unsettling definition for a common word." },
             { type: 'text', value: "Longest chicken flight: 13 seconds. Aim higher." },
             { type: 'question', value: "Set of all sets not containing themselves. Contains itself?" },
-            { type: 'sound_byte', message: "Quick, jarring beep.", soundType: "beep" },
             { type: 'button_game', initialText: "The Button", clickCount: 0 },
+            { type: 'joes_fact' },
             { type: 'text', value: "Rhinoceroses: a crash. Appropriate." },
             { type: 'question', value: "Tree falls, no one hears. Sound? Your comment, no reads?" },
             { type: 'image', value: "https://picsum.photos/seed/brainrot5/600/800", alt: "Abstract visual 5" },
@@ -1320,7 +1580,6 @@
             { type: 'question', value: "Communicate via interpretive dance. What now?" },
             { type: 'ai_text', prompt: "Generate a short, unsettling nursery rhyme." },
             { type: 'reaction_game', prompt: "TAP THE TRUTH!" },
-            { type: 'sound_byte', message: "A sudden whoosh.", soundType: "whoosh" },
             { type: 'text', value: "Phone > Apollo 11 computers. You scroll." },
             { type: 'ai_text', prompt: "Write a cryptic message from a forgotten dimension." },
             { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7buirYcmV5NUz58I/giphy.gif", alt: "Mind blown GIF" },
@@ -1328,7 +1587,6 @@
             { type: 'ai_text', prompt: "Generate a disturbing, one-sentence horror story." },
             { type: 'image', value: "https://source.unsplash.com/random/600x800/?glitch,reality", alt: "Glitchy reality image" },
             { type: 'question', value: "Amplify one sense infinitely. Which and why?" },
-            { type: 'sound_byte', message: "Short, sharp static burst.", soundType: "static" },
             { type: 'button_game', initialText: "The Final Click", clickCount: 0 },
             { type: 'ai_text', prompt: "Write a short, unsettling poem about observation." },
             { type: 'text', value: "Universe not obliged to make sense. It doesn't." },
@@ -1338,7 +1596,6 @@
             { type: 'timed_decision', question: "Truth or Illusion?", options: ["Truth", "Illusion"], time: 5 },
             { type: 'ai_text', prompt: "Generate a short, unsettling thought about time." },
             { type: 'image', value: "https://source.unsplash.com/random/600x800/?surreal,dream", alt: "Surreal dream image" },
-            { type: 'sound_byte', message: "Feel the low rumble.", soundType: "rumble" },
             { type: 'text', value: "Memories reconstructed. Are they real?" },
             { type: 'question', value: "One food for life. Regret it?" },
             { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3o7buirYcmV5NUz58I/giphy.gif", alt: "Mind blown GIF" },
@@ -1347,11 +1604,16 @@
             { type: 'timed_decision', question: "Conform or Rebel?", options: ["Conform", "Rebel"], time: 7 },
             { type: 'text', value: "Universe expands faster than light. You're falling behind." },
             { type: 'image', value: "https://source.unsplash.com/random/600x800/?void,glitch", alt: "Void glitch image" },
-            { type: 'sound_byte', message: "Whisper from the static.", soundType: "static" },
             { type: 'ai_text', prompt: "Generate a short, unsettling message from a parallel dimension." },
             { type: 'text', value: "Every decision: new universe. How many yous?" },
             { type: 'question', value: "Silence truly silent? Or unheard frequency?" },
-            { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HlSHw3D8y6fE18Y/giphy.gif", alt: "Confused meme GIF" }
+            { type: 'gif', value: "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd252a2JyeWl5OWFhMG0wM254b2FqZ29qZzJjY29lZ2Q1a2Z0OXQ5ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l0HlSHw3D8y6fE18Y/giphy.gif", alt: "Confused meme GIF" },
+            { type: 'memory_game', message: "Match the glitches!", symbols: ['⚡', '🌀', '👾', '👽', '💀', '🧠', '👁️', '🔗'] },
+            { type: 'truth_lie_game', statement: "The moon is made of cheese.", isTruth: false },
+            { type: 'truth_lie_game', statement: "Birds are actually government drones.", isTruth: true },
+            { type: 'memory_game', message: "Uncover the hidden patterns!", symbols: ['⭐', '✨', '💫', '🌌', '🚀', '🔭', '🪐', '🌑'] },
+            { type: 'absurd_scenario', prompt: "Generate a short, absurd, and slightly unsettling 'what if' scenario or a mini-story about something mundane." },
+            { type: 'random_command', prompt: "Generate a short, nonsensical, or slightly unsettling command or instruction for a human to follow. Make it abstract and thought-provoking, not a physical action." }
         ];
 
         // Shuffle function (Fisher-Yates) to keep it fresh
@@ -1474,7 +1736,6 @@
                     const aiText = await fetchAIGeneratedContent(contentItem.prompt);
                     loadingText.textContent = aiText; // Update with actual content
                     loadingText.classList.remove('ai-loading-message'); // Remove loading animation
-                    playGlitchSound(); // Sound effect for AI content reveal
                     updateBrainRot(5); // Increase brain rot for AI content
                     break;
 
@@ -1493,7 +1754,6 @@
 
                     button.addEventListener('click', () => {
                         clicks++;
-                        playGlitchSound();
                         updateBrainRot(3); // Increase brain rot for button clicks
                         if (clicks === 1) {
                             message.textContent = "Why did you click?";
@@ -1534,7 +1794,6 @@
                         choiceButton.classList.add('choice-button');
                         choiceButton.textContent = optionText;
                         choiceButton.addEventListener('click', () => {
-                            playGlitchSound();
                             updateBrainRot(4); // Increase brain rot for choices
                             const resultDiv = document.createElement('p');
                             resultDiv.classList.add('choice-result');
@@ -1601,7 +1860,6 @@
                             clearTimeout(timeoutId); // Clear the scheduled 'GO!'
                             showNotification("Reaction: Too Early!");
                         }
-                        playGlitchSound();
                         reactionButton.classList.remove('active');
                         reactionButton.disabled = true;
                         setTimeout(startGame, 2000); // Restart game after 2 seconds
@@ -1613,28 +1871,16 @@
                     startGame(); // Start the game when item is added
                     break;
 
-                case 'sound_byte':
-                    const soundByteContainer = document.createElement('div');
-                    soundByteContainer.classList.add('sound-byte-item');
-
-                    const soundByteMessage = document.createElement('p');
-                    soundByteMessage.classList.add('sound-byte-message');
-                    soundByteMessage.textContent = contentItem.message;
-                    soundByteContainer.appendChild(soundByteMessage);
-
-                    const soundByteButton = document.createElement('button');
-                    soundByteButton.classList.add('sound-byte-button');
-                    soundByteButton.innerHTML = '<i class="fas fa-volume-up"></i> Play Sound';
-                    soundByteContainer.appendChild(soundByteButton);
-
-                    soundByteButton.addEventListener('click', () => {
-                        playSoundByte(contentItem.soundType);
-                        updateBrainRot(2); // Small rot for sound interaction
-                    });
-
-                    contentArea.appendChild(soundByteContainer);
+                case 'joes_fact':
+                    const joesFactText = document.createElement('p');
+                    joesFactText.textContent = `Joe's Fact: ${joesFacts[Math.floor(Math.random() * joesFacts.length)]}`;
+                    joesFactText.style.fontStyle = 'italic';
+                    joesFactText.style.color = 'var(--highlight-color)';
+                    joesFactText.style.fontFamily = "var(--font-mono)";
+                    contentArea.appendChild(joesFactText);
                     newItem.appendChild(contentArea);
                     feedContainer.insertBefore(newItem, loadingIndicator);
+                    updateBrainRot(2);
                     break;
 
                 case 'gif':
@@ -1697,9 +1943,6 @@
                         if (!target.classList.contains('hit')) {
                             hits++;
                             target.classList.add('hit');
-                            playGlitchSound();
-                            vibrate(100);
-                            movingTargetMessage.textContent = `Hit! (${hits}/${maxHits})`;
                             updateBrainRot(5);
 
                             if (hits >= maxHits) {
@@ -1758,7 +2001,6 @@
                                 decisionResult.textContent = "Time's up! Indecision is a choice.";
                                 updateBrainRot(15); // High rot for indecision
                                 showNotification("Decision Failed: Timeout!");
-                                vibrate([200, 100, 200]);
                             }
                             Array.from(decisionOptionsDiv.children).forEach(btn => btn.disabled = true);
                         } else {
@@ -1777,7 +2019,6 @@
                                 decisionResult.textContent = `You chose: "${optionText}". The path is set.`;
                                 updateBrainRot(5); // Moderate rot for making a choice
                                 showNotification(`Decision Made: ${optionText}`);
-                                vibrate(70);
                                 Array.from(decisionOptionsDiv.children).forEach(btn => btn.disabled = true);
                             }
                         });
@@ -1790,6 +2031,204 @@
 
                     updateTimer(); // Initial display
                     timerInterval = setInterval(updateTimer, 1000);
+                    break;
+
+                case 'memory_game':
+                    const memoryGameContainer = document.createElement('div');
+                    memoryGameContainer.classList.add('memory-game');
+
+                    const memoryMessage = document.createElement('p');
+                    memoryMessage.classList.add('memory-message');
+                    memoryMessage.textContent = contentItem.message;
+                    memoryGameContainer.appendChild(memoryMessage);
+
+                    const memoryGrid = document.createElement('div');
+                    memoryGrid.classList.add('memory-grid');
+                    memoryGameContainer.appendChild(memoryGrid);
+
+                    let firstCard = null;
+                    let secondCard = null;
+                    let lockBoard = false;
+                    let matchesFound = 0;
+                    const totalPairs = contentItem.symbols.length;
+
+                    // Duplicate symbols to create pairs
+                    const gameSymbols = [...contentItem.symbols, ...contentItem.symbols];
+                    shuffleArray(gameSymbols);
+
+                    gameSymbols.forEach((symbol, index) => {
+                        const card = document.createElement('div');
+                        card.classList.add('memory-card');
+                        card.dataset.symbol = symbol;
+                        card.dataset.index = index;
+                        card.textContent = symbol; // Content is hidden by CSS initially
+                        memoryGrid.appendChild(card);
+
+                        card.addEventListener('click', () => {
+                            if (lockBoard || card === firstCard || card.classList.contains('matched')) return;
+
+                            card.classList.add('flipped');
+                            updateBrainRot(30);
+
+                            if (!firstCard) {
+                                firstCard = card;
+                                return;
+                            }
+
+                            secondCard = card;
+                            lockBoard = true;
+
+                            if (firstCard.dataset.symbol === secondCard.dataset.symbol) {
+                                // Match!
+                                matchesFound++;
+                                firstCard.classList.add('matched');
+                                secondCard.classList.add('matched');
+                                showNotification("Match Found!");
+                                updateBrainRot(7);
+
+                                [firstCard, secondCard] = [null, null];
+                                lockBoard = false;
+
+                                if (matchesFound === totalPairs) {
+                                    memoryMessage.textContent = "All matched! You've seen through the illusion.";
+                                    showNotification("Memory Master!");
+                                    updateBrainRot(20); // Big rot for completing game
+                                }
+                            } else {
+                                // No match
+                                setTimeout(() => {
+                                    firstCard.classList.remove('flipped');
+                                    secondCard.classList.remove('flipped');
+                                    [firstCard, secondCard] = [null, null];
+                                    lockBoard = false;
+                                    updateBrainRot(2); // Small rot for wrong guess
+                                }, 1000);
+                            }
+                        });
+                    });
+
+                    contentArea.appendChild(memoryGameContainer);
+                    newItem.appendChild(contentArea);
+                    feedContainer.insertBefore(newItem, loadingIndicator);
+                    break;
+
+                case 'truth_lie_game':
+                    const truthLieGameContainer = document.createElement('div');
+                    truthLieGameContainer.classList.add('truth-lie-game');
+
+                    const statementText = document.createElement('p');
+                    statementText.classList.add('statement-text');
+                    statementText.textContent = contentItem.statement;
+                    truthLieGameContainer.appendChild(statementText);
+
+                    const truthLieButtons = document.createElement('div');
+                    truthLieButtons.classList.add('truth-lie-buttons');
+                    truthLieGameContainer.appendChild(truthLieButtons);
+
+                    const truthButton = document.createElement('button');
+                    truthButton.classList.add('truth-lie-button', 'truth');
+                    truthButton.textContent = "Truth";
+                    truthLieButtons.appendChild(truthButton);
+
+                    const lieButton = document.createElement('button');
+                    lieButton.classList.add('truth-lie-button', 'lie');
+                    lieButton.textContent = "Lie";
+                    truthLieButtons.appendChild(lieButton);
+
+                    const truthLieResult = document.createElement('p');
+                    truthLieResult.classList.add('truth-lie-result');
+                    truthLieGameContainer.appendChild(truthLieResult);
+
+                    const disableTruthLieButtons = () => {
+                        truthButton.disabled = true;
+                        lieButton.disabled = true;
+                    };
+
+                    const checkAnswer = (isTruthGuess) => {
+                        disableTruthLieButtons();
+                        if (isTruthGuess === contentItem.isTruth) {
+                            truthLieResult.textContent = "Correct! Your perception is... adequate.";
+                            truthLieResult.classList.add('correct');
+                            showNotification("Correct! +1 Sanity Point (jk)");
+                            updateBrainRot(5);
+                        } else {
+                            truthLieResult.textContent = "Incorrect. Reality is subjective, but not *that* subjective.";
+                            truthLieResult.classList.add('incorrect');
+                            showNotification("Incorrect! -1 Sanity Point");
+                            updateBrainRot(10);
+                        }
+                    };
+
+                    truthButton.addEventListener('click', () => checkAnswer(true));
+                    lieButton.addEventListener('click', () => checkAnswer(false));
+
+                    contentArea.appendChild(truthLieGameContainer);
+                    newItem.appendChild(contentArea);
+                    feedContainer.insertBefore(newItem, loadingIndicator);
+                    break;
+
+                case 'absurd_scenario':
+                    const absurdScenarioContainer = document.createElement('div');
+                    absurdScenarioContainer.classList.add('llm-button-container');
+
+                    const scenarioPrompt = document.createElement('p');
+                    scenarioPrompt.textContent = "Tap to unlock an absurd scenario:";
+                    absurdScenarioContainer.appendChild(scenarioPrompt);
+
+                    const scenarioButton = document.createElement('button');
+                    scenarioButton.classList.add('llm-button');
+                    scenarioButton.innerHTML = '✨ Generate Scenario ✨';
+                    absurdScenarioContainer.appendChild(scenarioButton);
+
+                    const scenarioOutput = document.createElement('p');
+                    scenarioOutput.classList.add('llm-output');
+                    absurdScenarioContainer.appendChild(scenarioOutput);
+
+                    scenarioButton.addEventListener('click', async () => {
+                        scenarioOutput.textContent = "AI is conjuring a new reality...";
+                        scenarioButton.disabled = true;
+                        const generatedScenario = await fetchAIGeneratedContent(contentItem.prompt);
+                        scenarioOutput.textContent = generatedScenario;
+                        scenarioButton.disabled = false;
+                        updateBrainRot(10); // Higher brain rot for LLM content
+                        showNotification("New Scenario Unlocked!");
+                    });
+
+                    contentArea.appendChild(absurdScenarioContainer);
+                    newItem.appendChild(contentArea);
+                    feedContainer.insertBefore(newItem, loadingIndicator);
+                    break;
+
+                case 'random_command':
+                    const randomCommandContainer = document.createElement('div');
+                    randomCommandContainer.classList.add('llm-button-container');
+
+                    const commandPrompt = document.createElement('p');
+                    commandPrompt.textContent = "Receive a new directive:";
+                    randomCommandContainer.appendChild(commandPrompt);
+
+                    const commandButton = document.createElement('button');
+                    commandButton.classList.add('llm-button');
+                    commandButton.innerHTML = '✨ Get Command ✨';
+                    randomCommandContainer.appendChild(commandButton);
+
+                    const commandOutput = document.createElement('p');
+                    commandOutput.classList.add('llm-output');
+                    randomCommandContainer.appendChild(commandOutput);
+
+                    commandButton.addEventListener('click', async () => {
+                        commandOutput.textContent = "AI is whispering instructions...";
+                        commandButton.disabled = true;
+                        const generatedCommand = await fetchAIGeneratedContent(contentItem.prompt);
+                        commandOutput.textContent = generatedCommand;
+                        commandButton.disabled = false;
+                        updateBrainRot(10); // Higher brain rot for LLM content
+                        showNotification("Directive Received!");
+                    });
+
+                    contentArea.appendChild(randomCommandContainer);
+                    newItem.appendChild(contentArea);
+                    feedContainer.insertBefore(newItem, loadingIndicator);
                     break;
 
 
@@ -1814,7 +2253,7 @@
             }
 
 
-            // Add Comment Section
+            // Add Comment Section (always present but hidden by default)
             const commentSection = document.createElement('div');
             commentSection.classList.add('comment-section');
 
@@ -1828,14 +2267,6 @@
             closeCommentBtn.title = 'Close Comments';
             closeCommentBtn.addEventListener('click', () => {
                 commentSection.classList.remove('visible');
-                const commentIcon = newItem.querySelector('.interaction-icon.comment');
-                if (commentIcon && commentsList.children.length <= 1) { // Only un-highlight if no actual comments
-                    commentIcon.classList.remove('commented');
-                    commentIcon.querySelector('i').classList.remove('fas');
-                    commentIcon.querySelector('i').classList.add('far');
-                }
-                playGlitchSound();
-                vibrate(50);
             });
             commentHeader.appendChild(commentTitle);
             commentHeader.appendChild(closeCommentBtn);
@@ -1844,22 +2275,34 @@
 
             const commentsList = document.createElement('div');
             commentsList.classList.add('comments-list');
-            const placeholderComment = document.createElement('div');
-            placeholderComment.classList.add('comment');
-            // Add author and timestamp to placeholder
-            const placeholderAuthor = document.createElement('div');
-            placeholderAuthor.classList.add('comment-author');
-            placeholderAuthor.textContent = "System Observer";
-            const placeholderText = document.createElement('div');
-            placeholderText.classList.add('comment-text');
-            placeholderText.textContent = "The void whispers...";
-            const placeholderTimestamp = document.createElement('div');
-            placeholderTimestamp.classList.add('comment-timestamp');
-            placeholderTimestamp.textContent = new Date().toLocaleTimeString();
-            placeholderComment.appendChild(placeholderAuthor);
-            placeholderComment.appendChild(placeholderText);
-            placeholderComment.appendChild(placeholderTimestamp);
-            commentsList.appendChild(placeholderComment);
+
+            // Add initial fake comments
+            const numFakeComments = Math.floor(Math.random() * 3) + 1; // 1 to 3 fake comments
+            for (let i = 0; i < numFakeComments; i++) {
+                const randomComment = fakeComments[Math.floor(Math.random() * fakeComments.length)];
+                const randomAuthor = `User ${crypto.randomUUID().substring(0, 4)}`;
+                const randomTime = new Date(Date.now() - Math.random() * 3600000).toLocaleTimeString(); // Last hour
+
+                const newComment = document.createElement('div');
+                newComment.classList.add('comment');
+
+                const commentAuthor = document.createElement('div');
+                commentAuthor.classList.add('comment-author');
+                commentAuthor.textContent = randomAuthor;
+                newComment.appendChild(commentAuthor);
+
+                const commentContent = document.createElement('div');
+                commentContent.classList.add('comment-text');
+                commentContent.textContent = randomComment;
+                newComment.appendChild(commentContent);
+
+                const commentTimestamp = document.createElement('div');
+                commentTimestamp.classList.add('comment-timestamp');
+                commentTimestamp.textContent = randomTime;
+                newComment.appendChild(commentTimestamp);
+
+                commentsList.appendChild(newComment);
+            }
 
 
             const commentInputArea = document.createElement('div');
@@ -1875,8 +2318,6 @@
             commentButton.addEventListener('click', () => {
                 const commentText = commentInput.value.trim();
                 if (commentText) {
-                    playGlitchSound(); // Sound on comment
-                    vibrate(70);
                     const newComment = document.createElement('div');
                     newComment.classList.add('comment');
 
@@ -1919,7 +2360,8 @@
             commentSection.appendChild(commentsList);
             commentSection.appendChild(commentInputArea);
 
-            newItem.appendChild(commentSection);
+            // Append comment section to body (not feed item) so it can slide over everything
+            document.body.appendChild(commentSection);
 
 
             // Add interaction bar
@@ -1928,16 +2370,16 @@
 
             const likeIcon = document.createElement('div');
             likeIcon.classList.add('interaction-icon', 'like');
-            likeIcon.innerHTML = '<i class="far fa-heart"></i>';
+            likeIcon.innerHTML = '<i class="far fa-heart"></i><span class="interaction-icon-text">Like</span>';
             likeIcon.title = 'Like (or don\'t, who cares?)';
-            likeIcon.addEventListener('click', () => {
+            likeIcon.addEventListener('click', (e) => {
                 likeIcon.classList.toggle('liked');
                 const iconElement = likeIcon.querySelector('i');
                 if (likeIcon.classList.contains('liked')) {
                     iconElement.classList.remove('far');
                     iconElement.classList.add('fas');
-                    playGlitchSound(); // Sound on like
-                    vibrate(50);
+                    spawnConfetti(e.clientX, e.clientY); // Confetti at click location
+                    showNotification("Liked! +1 Dopamine Hit.");
                     // Update like counter
                     const counter = likeIcon.querySelector('.interaction-counter') || document.createElement('span');
                     counter.classList.add('interaction-counter');
@@ -1963,10 +2405,10 @@
 
             const commentIcon = document.createElement('div');
             commentIcon.classList.add('interaction-icon', 'comment');
-            commentIcon.innerHTML = '<i class="far fa-comment-dots"></i>';
+            commentIcon.innerHTML = '<i class="far fa-comment-dots"></i><span class="interaction-icon-text">Comment</span>';
             commentIcon.title = 'Comment (into the void)';
             commentIcon.addEventListener('click', () => {
-                 const targetCommentSection = newItem.querySelector('.comment-section');
+                 const targetCommentSection = document.querySelector('.comment-section'); // Target the single global comment section
                  const iconElement = commentIcon.querySelector('i');
 
                  if (targetCommentSection) {
@@ -1980,11 +2422,9 @@
                          if (input) {
                              setTimeout(() => input.focus(), 500);
                          }
-                         playGlitchSound(); // Sound on opening comments
-                         vibrate(70);
                      } else {
                          // Only un-highlight if no actual comments were added (beyond placeholder)
-                         if (commentsList.children.length <= 1) {
+                         if (commentsList.children.length <= numFakeComments) { // Check against initial fake comments
                              iconElement.classList.remove('fas');
                              iconElement.classList.add('far');
                              commentIcon.classList.remove('commented');
@@ -1996,7 +2436,7 @@
 
             const shareIcon = document.createElement('div');
             shareIcon.classList.add('interaction-icon', 'share');
-            shareIcon.innerHTML = '<i class="fas fa-share"></i>';
+            shareIcon.innerHTML = '<i class="fas fa-share"></i><span class="interaction-icon-text">Share</span>';
             shareIcon.title = 'Share (this rot with others)';
             shareIcon.addEventListener('click', () => {
                  shareIcon.classList.toggle('shared');
@@ -2007,9 +2447,8 @@
                      shareIcon.style.color = '';
                      shareIcon.classList.remove('shared');
                  }, 300);
-                 playGlitchSound(); // Sound on share
-                 vibrate(90);
                  updateBrainRot(3); // Increase brain rot for sharing
+                 showNotification("Rot Shared! You're a true enabler.");
                  console.log('Share clicked. The rot spreads.');
             });
 
@@ -2022,11 +2461,11 @@
                 likeIcon.appendChild(likeCounter);
             }
 
-            const initialComments = Math.floor(Math.random() * 10); // Random initial comments
-            if (initialComments > 0) {
+            const initialCommentsCount = numFakeComments; // Use the number of fake comments
+            if (initialCommentsCount > 0) {
                 const commentCounter = document.createElement('span');
                 commentCounter.classList.add('interaction-counter');
-                commentCounter.textContent = initialComments;
+                commentCounter.textContent = initialCommentsCount;
                 commentIcon.appendChild(commentCounter);
             }
 
@@ -2134,7 +2573,7 @@
                      console.log("Initial items didn't fill screen, triggering immediate load.");
                      loadMoreItems();
                  }
-             }, 100);
+            }, 100);
         }
 
         // Custom Cursor Logic
@@ -2244,6 +2683,7 @@
                  loadMoreItems();
             }
              setupObserver();
+             resizeConfettiCanvas(); // Resize confetti canvas on window resize
         });
 
     </script>
